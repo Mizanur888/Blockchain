@@ -46,8 +46,8 @@ Week 5: Present the work
 Week 6: Wrap up and deliver the final report.
 
 Team members:
-+* Malnati Josh, Programmer
-+* Affel Harrison, Programmer
-+* Mizanur Raman, Programmer
++ Malnati Josh, Programmer
+* Affel Harrison, Programmer
+- Mizanur Raman, Programmer
 
 
