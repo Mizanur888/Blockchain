@@ -64,4 +64,4 @@ Ensure that the following is already installed and working on your machine:
 
 #### Installing web3.js
 https://medium.com/coinmonks/build-a-dapp-using-ethereum-and-angular-6-a404fbf3c08d
-$ npm install web3@0.20.5
++ $ npm install web3@0.20.5
