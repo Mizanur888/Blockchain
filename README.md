@@ -61,3 +61,7 @@ Ensure that the following is already installed and working on your machine:
 * node
 * ng
 * solidity (solc)
+
+#### Installing web3.js
+$ cd transfer/
+$ npm install web3@0.20.5
