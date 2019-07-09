@@ -51,3 +51,13 @@ Week 6: Wrap up and deliver the final report.
 - Mizanur Raman, Programmer
 
 
+
+
+# Prerequisite to work with solidity
+Ensure that the following is already installed and working on your machine:
+* npm
+* truffle
+* ganache
+* node
+* ng
+* solidity (solc)
