@@ -45,7 +45,7 @@ Week 4: Implement and test the flow
 Week 5: Present the work
 Week 6: Wrap up and deliver the final report.
 
-Team members:
+### Team members:
 + Malnati Josh, Programmer
 * Affel Harrison, Programmer
 - Mizanur Raman, Programmer
