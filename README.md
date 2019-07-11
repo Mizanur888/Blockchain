@@ -46,9 +46,9 @@ Notify Api ( will notify user With the Smart contact Expiration Date )
 + Week 6: Wrap up and deliver the final report.
 
 ### Team members:
-+ Malnati Josh, Programmer
-* Affel Harrison, Programmer
-- Mizanur Raman, Programmer
++ Malnati Josh, Front end
+* Affel Harrison, Soliditity 
+- Mizanur Raman, Backend 
 
 
 # Prerequisite to work with solidity
