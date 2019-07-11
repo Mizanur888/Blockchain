@@ -51,8 +51,6 @@ Week 6: Wrap up and deliver the final report.
 - Mizanur Raman, Programmer
 
 
-
-
 # Prerequisite to work with solidity
 Ensure that the following is already installed and working on your machine:
 * npm
@@ -65,3 +63,12 @@ Ensure that the following is already installed and working on your machine:
 #### Installing web3.js
 https://medium.com/coinmonks/build-a-dapp-using-ethereum-and-angular-6-a404fbf3c08d
 + $ npm install web3@0.20.5
+
+
+
+
+
+# Reading About Smart Contact 
+ how smart contact work
+https://blockgeeks.com/guides/smart-contracts/
+
