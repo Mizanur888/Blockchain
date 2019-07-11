@@ -38,12 +38,12 @@ Notify Api ( will notify user With the Smart contact Expiration Date )
 8.      Final report (Poster, white paper, …)
 
 ### Plan
-Week 1: Write proposal, setup team Github repo., Produce design document: backend, smart contract, final decisions on tools to be used 
-Week 2: Produce design document: frontend, workflow
-Week 3: Implement smart contract, frontend, and backend
-Week 4: Implement and test the flow
-Week 5: Present the work
-Week 6: Wrap up and deliver the final report.
++ Week 1: Write proposal, setup team Github repo., Produce design document: backend, smart contract, final decisions on tools to be used 
++ Week 2: Produce design document: frontend, workflow
++ Week 3: Implement smart contract, frontend, and backend
++ Week 4: Implement and test the flow
++ Week 5: Present the work
++ Week 6: Wrap up and deliver the final report.
 
 ### Team members:
 + Malnati Josh, Programmer
