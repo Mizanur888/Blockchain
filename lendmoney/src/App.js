@@ -62,6 +62,7 @@ class App extends Component {
   };
   render() {
     console.log(this.state.loaner);
+
     return (
       <Router>
         <div className="App">

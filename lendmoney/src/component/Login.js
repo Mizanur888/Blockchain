@@ -1,42 +1,89 @@
 import React, { Component } from "react";
+import Loaner from "./Loaner";
+import App from "../App";
+import Debtor from "./Debtor";
 class Login extends Component {
+  state = {
+    isLoginSuccess: false,
+    address: "",
+    privateKey: "",
+    page: ""
+  };
+  onSubmit = e => {
+    e.preventDefault();
+
+    if (
+      this.state.address !== "" &&
+      this.state.privateKey !== "" &&
+      this.state.page !== ""
+    ) {
+      this.setState({ isLoginSuccess: true });
+      alert(this.state.page);
+    }
+  };
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
   render() {
+    if (this.state.isLoginSuccess) {
+      if (this.state.page === "Loaner") {
+        this.props.history.push({
+          pathname: "/App",
+          state: {
+            privateKey: this.state.privateKey
+          }
+        });
+      } else {
+        this.props.history.push({
+          pathname: "/Debtor",
+          state: {
+            privateKey: this.state.privateKey
+          }
+        });
+      }
+    }
     return (
       <form
         onSubmit={this.onSubmit}
-        style={{
-          margin: "10px",
-          paddingLeft: "20px",
-          textAlign: "center",
-          justifyContent: "center"
-        }}
+        style={{ margin: "10px", padding: "10px" }}
       >
-        <div class="form-group">
-          <label for="address">privateKey</label>
+        <div className="form-group">
+          <label htmlFor="address">Address</label>
           <input
             type="address"
-            class="form-control"
+            name="address"
+            className="form-control"
             id="address"
             placeholder="address"
+            value={this.state.address}
+            onChange={this.onChange}
           />
         </div>
-        <div class="form-group">
-          <label for="privateKey">privateKey</label>
+        <div className="form-group">
+          <label htmlFor="privateKey">privateKey</label>
           <input
-            type="password"
-            class="form-control"
+            type="privateKey"
+            name="privateKey"
+            className="form-control"
             id="privateKey"
             placeholder="privateKey"
+            value={this.state.privateKey}
+            onChange={this.onChange}
           />
         </div>
-        <div class="form-group">
-          <label for="state">Options</label>
-          <select class="form-control" id="state">
+        <div className="form-group">
+          <label htmlFor="page">state</label>
+          <select
+            className="form-control"
+            id="page"
+            name="page"
+            value={this.state.page}
+            onChange={this.onChange}
+          >
+            <option />
+            <option>Debtor</option>
             <option>Loaner</option>
-            <option>Debter</option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary mb-2">
+        <button type="submit" className="btn btn-primary mb-2">
           submit
         </button>
       </form>
