@@ -23,7 +23,7 @@ struct Loan {
     address[] allDebtors;
     
     //add params
-    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public payable returns (uint){
+    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public view payable returns (uint){
         Loan memory newloan =  Loan({
            amount: _amount,
            loaner: _loaner,
