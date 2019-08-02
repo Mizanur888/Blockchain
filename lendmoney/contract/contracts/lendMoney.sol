@@ -16,14 +16,14 @@ struct Loan {
     uint CurLoanCount = 0;
     mapping(address => address) loaners;
     mapping(address => address) debtors;
-
-    mapping(uint => Loan) allloans;
     
+    mapping(uint => Loan) allloans;
+    Loan[] everyLoan;
     address[] allLoaners;
     address[] allDebtors;
     
     //add params
-    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public view payable returns (uint){
+    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public payable returns (uint){
         Loan memory newloan =  Loan({
            amount: _amount,
            loaner: _loaner,
@@ -35,7 +35,8 @@ struct Loan {
            loanFinished: false,
            requestEnd: false
         });
-        //we need a way to have this function alert the debtor/loaner. or maybe just handle that all on the front end 
+    
+        
         allloans[CurLoanCount] = newloan;
         allLoaners.push(_loaner);
         allDebtors.push(_debtor);
@@ -65,23 +66,29 @@ struct Loan {
         //how to use webjs to check wallet balances https://ethereum.stackexchange.com/questions/39746/cant-get-address-balance-using-web3js <-- needed for forcing debtor
         
         loaner.transfer(tmploan.amount + interest);
+        CurLoanCount--;
     }
+    
     
     
     
     function requestEnd(uint index) public payable{
         Loan storage  tmploan = allloans[index];
+        if(!tmploan.loanFinished){
         require(msg.sender == tmploan.debtor);
         tmploan.requestEnd = true;        
+        }
     }
     
     function confirmEnd(uint index, bool option) public payable{ 
         Loan storage  tmploan = allloans[index];
         require(msg.sender == tmploan.loaner, "Only the Loaner May call this function");
+        if(!tmploan.loanFinished){
         if(tmploan.requestEnd){
-            tmploan.loanFinished = true;
-            tmploan.debtor.transfer(tmploan.amount);
-        }   
+                tmploan.loanFinished = true;
+                tmploan.debtor.transfer(tmploan.amount);
+            }   
+        }
         
     }
     
@@ -90,18 +97,24 @@ struct Loan {
         //require that sender has the money 
         require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");
         Loan storage  tmploan = allloans[index];
-        uint amount = msg.value;
-        uint change = 0;
-        if(amount > tmploan.amount){
-            tmploan.amount = 0;
-            change = amount - tmploan.amount;
+        if(!tmploan.loanFinished){
+            
+            uint amount = msg.value;
+            uint change = 0;
+            if(amount > tmploan.amount){
+                tmploan.amount = 0;
+                change = amount - tmploan.amount;
+            }
+            
+            if(change!=0){
+                //if the debtor 
+                tmploan.loaner.transfer(change);
+            }
+            
+            if(amount == 0){
+                tmploan.loanFinished = true;
+            }
         }
-        
-        if(change!=0){
-            //if the debtor 
-            tmploan.debtor.transfer(change);
-        }
-        
     }
     
     
