@@ -31,7 +31,7 @@ class Loaner extends Component {
             Appprove
           </button>
           <button
-            onClick={this.props.getRegect.bind(this, loan.requestID)}
+            onClick={this.props.getReject.bind(this, loan.requestID)}
             className="btn btn-warning btn-xs"
           >
             Regect
