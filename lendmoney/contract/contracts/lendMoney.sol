@@ -55,8 +55,16 @@ struct Loan {
         require(msg.sender == tmploan.loaner, "Only the loaner can call this function. Debtor must requets an end to the loan");
         
         // //lay loaner from debtor
-        address payable debtor = tmploan.debtor;
-        debtor.transfer(tmploan.amount);
+        address payable loaner = tmploan.loaner;
+        uint interest = tmploan.interest * tmploan.amount;
+        //This function has some issues, throwing non descript errors, 
+        //possible that we may need to make the debtor call this function to get the funds to the loaner.
+        //The frontend would populate the 'amount' parameter forcing the debtor to pay the loan at the required amount.
+        //The loaner would never call this function, they would call a frontend method that forces the debtor to pay the required amount back to the contract. 
+        
+        //how to use webjs to check wallet balances https://ethereum.stackexchange.com/questions/39746/cant-get-address-balance-using-web3js <-- needed for forcing debtor
+        
+        loaner.transfer(tmploan.amount + interest);
     }
     
     
@@ -88,11 +96,11 @@ struct Loan {
             tmploan.amount = 0;
             change = amount - tmploan.amount;
         }
+        
         if(change!=0){
             //if the debtor 
             tmploan.debtor.transfer(change);
         }
-        
         
     }
     
@@ -126,10 +134,17 @@ struct Loan {
     uint condition,
     bool loanFinished,
     bool requestEnd){
-                        Loan storage  tmploan = allloans[index];
-                return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd);                
 
+    Loan storage  tmploan = allloans[index];
+           uint curtime = now;
+            if(curtime > tmploan.dueDate){
+                tmploan.loanFinished = true;
+                tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
+            }
+                        
+            return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
     }
+    
     //check below comment on how a date is a uint (below is needed for frontend interaction with the contract)
     //https://ethereum.stackexchange.com/questions/32173/how-to-handle-dates-in-solidity-and-web3
     
