@@ -12,7 +12,6 @@ class App extends Component {
     super(props)
     this.state = {
       loaner: [
-        
         {
           requestID: this.requestID,
           senderAddress: this.senderAddress,
@@ -49,6 +48,7 @@ class App extends Component {
 
   startLoan(loaner, debtor, amount, interest, dueDate, condition){
     let app = this
+   
   }
 
   getReject = id => {
