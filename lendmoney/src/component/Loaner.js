@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DebtorTable from "./UI/DebtorTable";
+import DebtorTable from "./UI/LoanerTable";
 import AddLandMoney from "./UI/AddLandMoney";
 import LandMoney from "../Model/LandMoney";
 import { lendContract, account0 } from "../config";
@@ -16,7 +16,7 @@ import {
 class Loaner extends Component {
     constructor(props) {
       super(props);
-  
+      
       this.privateKey = this.props.history.location.state.privateKey;
       console.log("Private Key: " + this.privateKey);
       console.log("Condiation: " + this.props.history.location.Condition);
@@ -80,6 +80,16 @@ class Loaner extends Component {
         })
       });
     };
+
+    endLoan(){
+      let app = this
+
+      lendContract.methods.endLoan(0)
+       .send()
+       .then((leand)=>{
+         app.setState({loaner:[...this.state.loaner.pop]})       
+       });
+    }
   
     pushAddmoneyToContract=(contract)=>{
       let app = this;

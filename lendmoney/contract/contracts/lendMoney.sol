@@ -22,6 +22,9 @@ struct Loan {
     address[] allLoaners;
     address[] allDebtors;
     
+    function getLoanCount() public view returns (uint){
+            return CurLoanCount;
+    }
     //add params
     function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public payable returns (uint){
         Loan memory newloan =  Loan({
@@ -139,9 +142,6 @@ struct Loan {
         return allDebtors;
     }
     
-    function pleaseWork() public pure returns(uint){
-        return 1337;
-    }
     
     function checkLoan(uint index) public returns( uint amount,
     address payable loaner,

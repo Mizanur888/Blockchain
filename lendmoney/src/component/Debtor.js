@@ -19,9 +19,27 @@ class Debtor extends Component {
       ShowTable: true,
       ShowAddLand: false,
       loaner: [
-  
+        {
+          LoanerAddress: "a309cf",
+          DebtorAddress: "ar29292#4112erc",
+          Amount: "5ETH",
+          InterestRate: "5%",
+          DueDate: "23-2-19",
+          Condition: "pending"
+        },
+        {
+          LoanerAddress: "a309cf",
+          DebtorAddress: "ar29292#4112erc",
+          Amount: "5ETH",
+          InterestRate: "5%",
+          DueDate: "23-2-19",
+          Condition: "pending"
+        }
       ]
     };
+
+
+
 
     this.AddLandMoney = this.AddLandMoney.bind(this);
 
@@ -50,27 +68,36 @@ class Debtor extends Component {
 
   PayLoan = id => {
     let app = this;
-    this.setState({
-      loaner: this.state.loaner.map(loan => {
-        if (loan.requestID === id) {
-          var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
-   var res = lendContract.methods.payLoan(loan.Amount)
-     .send({from: loan.DebtorAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}).then((leand)=>{
-      
-      app.setState({loaner:[...this.state.loaner,loan, leand]})       
-    });
+//we need to change the "from:" parameter  to the address in the table row , as well as the value 
+      var s = String.toString(id)
+      var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+      var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      var a = String.toString(loan.Amount)
+
+      var res = lendContract.methods.PayLoan(id)
+         .send({from: loan.LoanerAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}, (error, transactionHash) => {
+            if(!error){        
+              loan.Condition = "Finished"
+              loan.Index = 3
+              this.setState({ loaner: [...this.state.loaner, loan] });
+              this.setState(oldState => ({
+                ShowAddLand: !oldState.ShowAddLand,
+                ShowTable: !oldState.ShowTable
+              }));
+              
+           
+         }});
     
-        
-          loan.state = "complete"
-          app.setState({loaner:[...this.state.loaner,loan ]})       
-        
+    if(res.message.contains("sender doesn't have enough funds to send tx.")){    
+      return 0    
+    }else{
+      return res
+    }
 
-        }
-        return loan;
-      })
-    });
-  };
+}
+
+  
 
 
   pushAddmoneyToContract=(contract)=>{
@@ -94,27 +121,38 @@ class Debtor extends Component {
     let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
     web3.eth.defaultAccount = web3.eth.accounts[0];
 
-    
+    //this method works and has error checking 
+
    var res = lendContract.methods.startLoan(contract.LoanerAddress,
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
-     .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)})
-     .then((leand)=>{
-       contract.Index = res
-       app.setState({loaner:[...this.state.loaner,contract, leand]})       
-     });
+     .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
+        if(!error){        
+          contract.Condition = "Accepted"
+          contract.Index = 3
+          this.setState({ loaner: [...this.state.loaner, contract] });
+          this.setState(oldState => ({
+            ShowAddLand: !oldState.ShowAddLand,
+            ShowTable: !oldState.ShowTable
+          }));
+          
+       
+     }});
+
+    
+    
      
-
-
-    //  lendContract.methods.pleaseWork().call().then((leand)=>{
-    //   app.setState({loaner:[...this.state.loaner,contract]})
-    //  });
      
-    }
+      }
 
-    checkLoan = id => {
-      
+    checkLoan =(contract)=> {
+      var lend = lendContract.methods.checkLoan(contract.Index).send({from: contract.DebtorAddress, gas:3000000, value: Web3.utils.toWei(contract.Amount)}).then((lend)=>{      
+          
+      });
     }
   
+    getNumLoans(){
+
+    }
     
 
   addLandMoney = (
@@ -123,7 +161,8 @@ class Debtor extends Component {
     Amount,
     InterestRate,
     DueDate,
-    Index
+    Index,
+    Condition
   ) => {
     const landMoney = {
       LoanerAddress,
@@ -132,15 +171,13 @@ class Debtor extends Component {
       InterestRate,
       DueDate,
       Index,
-      Condition:'Pending'
+      Condition
     };
+    
     this.pushAddmoneyToContract(landMoney);
-    this.setState({ loaner: [...this.state.loaner, landMoney] });
-    this.setState(oldState => ({
-      ShowAddLand: !oldState.ShowAddLand,
-      ShowTable: !oldState.ShowTable
-    }));
+    
   }
+  
 
 
   

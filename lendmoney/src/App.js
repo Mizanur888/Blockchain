@@ -19,16 +19,16 @@ class App extends Component {
           interestRate: this.interestRate,
           state: this.state
         },
-        // {
-        //   requestID: "b309cf",
-        //   senderAddress: "br29292#4112erc",
-        //   amount: "5BTC",
-        //   interestRate: "5%",
-        //   state: "pending"
-        // },
+        {
+          requestID: "b309cf",
+          senderAddress: "br29292#4112erc",
+          amount: "5BTC",
+          interestRate: "5%",
+          state: "pending"
+        },
         {
           requestID: "ce309cf",
-          senderAddress: "",//this.getSenderAddr(requestID),
+          senderAddress: "", 
           amount: "5BTC",
           interestRate: "5%",
           state: "Approved"
@@ -61,6 +61,7 @@ class App extends Component {
       })
     });
   };
+
   getApproved = id => {
     this.setState({
       loaner: this.state.loaner.map(loan => {
@@ -72,22 +73,22 @@ class App extends Component {
     });
   };
   render() {
-    // try{
+    try{
       console.log(this.state.loaner);
-    // } catch (error){
-    //   return(
-    //     <Router>
-    //     <div className="App">
-    //       <Header />
-    //       <h1>
-    //         No loans found
-    //       </h1>
-    //       <Route exact path="/" component={Login} />
-    //       <Route exact path="/Debtor" component={Debtor} />
-    //     </div>
-    //   </Router>
-    //   );
-    // }
+    } catch (error){
+      return(
+        <Router>
+        <div className="App">
+          <Header />
+          <h1>
+            No loans found
+          </h1>
+          <Route exact path="/" component={Login} />
+          <Route exact path="/Debtor" component={Debtor} />
+        </div>
+      </Router>
+      );
+    }
   
 
     return (
