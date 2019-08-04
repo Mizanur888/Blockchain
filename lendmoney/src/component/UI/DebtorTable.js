@@ -57,7 +57,7 @@ export class DebtorTable extends Component {
               )}
               className="btn btn-success btn-xs"
             >
-              Request End 
+              Request End
             </button>
           )}
         </td>
@@ -68,8 +68,8 @@ export class DebtorTable extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Request ID</th>
-              <th scope="col">Sender Address</th>
+              <th scope="col">Loaner Address</th>
+              <th scope="col">Debtor Address</th>
               <th scope="col">Amount</th>
               <th scope="col">Interest Rate</th>
               <th scope="col">Status</th>

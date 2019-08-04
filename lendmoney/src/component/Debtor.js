@@ -19,24 +19,7 @@ class Debtor extends Component {
       ShowTable: true,
       ShowAddLand: false,
       loaner: [
-        {
-          LoanerAddress: "a309cf",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          Index :"2"
-        },
-        {
-          LoanerAddress: "a309cf",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          Index: "3"
-        }
+  
       ]
     };
 
@@ -66,10 +49,23 @@ class Debtor extends Component {
   };
 
   PayLoan = id => {
+    let app = this;
     this.setState({
       loaner: this.state.loaner.map(loan => {
         if (loan.requestID === id) {
-           
+          var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+   var res = lendContract.methods.payLoan(loan.Amount)
+     .send({from: loan.DebtorAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}).then((leand)=>{
+      
+      app.setState({loaner:[...this.state.loaner,loan, leand]})       
+    });
+    
+        
+          loan.state = "complete"
+          app.setState({loaner:[...this.state.loaner,loan ]})       
+        
+
         }
         return loan;
       })
@@ -81,8 +77,8 @@ class Debtor extends Component {
     let app = this;
     const condition =1;
     ///how to get values from the form???
-    const loanerprivkey = contract.loanerprivkey;
-    const debtorprivkey = contract.debtorprivkey;
+    const loanerprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
+    const debtorprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     var loaner = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     var debtor = "0xa734d865d79871bec95acf86471b87921be81d66";
 

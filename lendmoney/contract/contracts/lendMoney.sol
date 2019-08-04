@@ -93,7 +93,7 @@ struct Loan {
     }
     
     
-    function payLoan(uint index) public payable{
+    function payLoan(uint index) public payable returns(bool){
         //require that sender has the money 
         require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");
         Loan storage  tmploan = allloans[index];
@@ -113,7 +113,9 @@ struct Loan {
             
             if(amount == 0){
                 tmploan.loanFinished = true;
+                return true;
             }
+            return false;
         }
     }
     
