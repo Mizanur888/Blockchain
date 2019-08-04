@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import Loaner from "./Loaner";
 import App from "../App";
 import Debtor from "./Debtor";
+
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   withRouter
 } from "react-router-dom";
+
 class Login extends Component {
   state = {
     isLoginSuccess: false,
@@ -15,6 +17,7 @@ class Login extends Component {
     privateKey: "",
     page: ""
   };
+  
   onSubmit = e => {
     e.preventDefault();
 

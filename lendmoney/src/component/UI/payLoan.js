@@ -68,18 +68,7 @@ export class AddLandMoney extends Component {
               onChange={this.onChange}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="privateKey">Amount</label>
-            <input
-              type="Amount"
-              name="Amount"
-              className="form-control"
-              id="Amount"
-              placeholder="Amount"
-              value={this.state.Amount}
-              onChange={this.onChange}
-            />
-          </div>
+          
           <div className="form-group">
             <label htmlFor="privateKey">InterestRate</label>
             <input
@@ -104,6 +93,20 @@ export class AddLandMoney extends Component {
               onChange={this.onChange}
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="privateKey">Amount</label>
+            <input
+              type="Amount"
+              name="Amount"
+              className="form-control"
+              id="Amount"
+              placeholder="Amount"
+              value={this.state.Amount}
+              onChange={this.onChange}
+            />
+          </div>
+
           <button type="submit" className="btn btn-primary mb-2">
             submit
           </button>

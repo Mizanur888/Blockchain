@@ -100,8 +100,8 @@ class Loaner extends Component {
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
       let account1 = '0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3'
           
-      lendContract.methods.startLoan(web3.utils.asciiToHex(loaner),
-      web3.utils.asciiToHex(debtor), 12, 5, 1, condition,loanerprivkey,debtorprivkey)
+      lendContract.methods.startLoan(this.state.LoanerAddress,
+        this.state.DebtorAddress, 12, 5, 1, condition,loanerprivkey,debtorprivkey)
        .send()
        .then((leand)=>{
          app.setState({loaner:[...this.state.loaner,contract]})       

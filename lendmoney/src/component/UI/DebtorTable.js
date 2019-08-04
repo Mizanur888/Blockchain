@@ -18,6 +18,7 @@ export class DebtorTable extends Component {
         <td>{loan.Amount}</td>
         <td>{loan.InterestRate}</td>
         <td>{loan.Condition}</td>
+        <td>{loan.Index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (
             <button
@@ -28,7 +29,35 @@ export class DebtorTable extends Component {
               )}
               className="btn btn-success btn-xs"
             >
-              PayLoan
+              Pay Loan
+            </button>
+          )}
+        </td>
+        <td style={{ display: "white-space: nowrap", margin: "10px" }}>
+          {this.state.isEmptyState && (
+            <button
+              onClick={this.props.PayLoan.bind(
+                this,
+                loan.requestID,
+                this.state.isEmptyState
+              )}
+              className="btn btn-success btn-xs"
+            >
+              Update Info
+            </button>
+          )}
+        </td>
+        <td style={{ display: "white-space: nowrap", margin: "10px" }}>
+          {this.state.isEmptyState && (
+            <button
+              onClick={this.props.PayLoan.bind(
+                this,
+                loan.requestID,
+                this.state.isEmptyState
+              )}
+              className="btn btn-success btn-xs"
+            >
+              Request End 
             </button>
           )}
         </td>
@@ -44,7 +73,8 @@ export class DebtorTable extends Component {
               <th scope="col">Amount</th>
               <th scope="col">Interest Rate</th>
               <th scope="col">Status</th>
-              <th scope="col">Action</th>
+              <th scope="col">Index</th>
+              <th scope="col">Action</th>              
             </tr>
           </thead>
           <tbody>{loanMoney}</tbody>
