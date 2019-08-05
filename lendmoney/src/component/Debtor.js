@@ -65,7 +65,29 @@ class Debtor extends Component {
     }));
     console.log("ShowTable" + this.state.ShowTable + this.state.ShowAddLand);
   };
-
+  EndLoan = id => { 
+    var s = String.toString(id)
+    var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+    var res = lendContract.methods.EndLoan(id)
+         .send({from: loan.LoanerAddress, gas:3000000, value: Web3.utils.toWei(loan.Amount)}, (error, transactionHash) => {
+            if(!error){        
+              loan.Condition = "Finished"
+              loan.Index = 3
+              this.setState({ loaner: [...this.state.loaner, loan] });
+              this.setState(oldState => ({
+                ShowAddLand: !oldState.ShowAddLand,
+                ShowTable: !oldState.ShowTable
+              }));
+              
+           
+         }});
+    
+    if(res.message.contains("sender doesn't have enough funds to send tx.")){    
+      return 0    
+    }else{
+      return res
+    }
+  }
   PayLoan = id => {
     let app = this;
 
