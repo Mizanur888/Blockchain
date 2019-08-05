@@ -5,7 +5,6 @@ import LandMoney from "../Model/LandMoney";
 import { lendContract, account0 } from "../config";
 import Web3 from "web3";
 import Login from "./Login";
-import { threadId } from "worker_threads";
 
 class Debtor extends Component {
   constructor(props) {
@@ -96,52 +95,31 @@ class Debtor extends Component {
   PayLoan = (id) => {
     let app = this;
 
-//we need to change the "from:" parameter  to the address in the table row , as well as the value 
-let s = String.toString(0)
-//var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+    //we need to change the "from:" parameter  to the address in the table row , as well as the value 
+    let s = String.toString(0)
+    //var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
 
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-      for(var i = 0;i<this.state.loaner.length;i++){
-        alert(this.state.loaner[i].Condition );
-        alert(this.state.loaner[i].Index);
-        var index = this.state.loaner[i].Index;
+      for(var i = 0;i<this.state.loaner.length;i++){        
+        var index = this.state.loaner[id].Index;
         if(i === index){
-          var res = lendContract.methods.payLoan(this.state.loaner[i].Index)
-          .send({from: this.state.loaner[i].LoanerAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[i].Amount)}, (error, transactionHash) => {
-            alert(id) 
-            alert(" ia m here")    
-            alert(this.state.loaner[id].Condition );
-            this.state.loaner[id].Condition = "hello world";
-            alert(this.state.loaner[id].Condition);
-            threadId.setState({this.condition:})
-            if(!error){   
-              alert(id)     
-              alert(this.state.loaner[id].Condition );
-              this.state.loaner[id].Condition = "hello world";
-              alert(this.state.loaner[id].Condition);
-             }
-             else{
-               alert(error);
-             }
+          alert(this.state.loaner[id].Index)
+          var res = lendContract.methods.payLoan(this.state.loaner[id].Index)
+          .send({from: this.state.loaner[id].LoanerAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[id].Amount)}, (error, transactionHash) => {            
+            if(!error){                 
+              this.state.loaner[id].Condition = "DONE";
+              this.forceUpdate();  
+             }             
         });
         }
       }
       
+      var loan = lendContract.methods.checkLoan(0).call({from: account0, gas:3000000}, (error, hash)=>{
+        if(!error){
+          alert(hash)
+        }
+      });
       
-      // var res = lendContract.methods.payLoan(id)
-      //    .send({from: loan.LoanerAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}, (error, transactionHash) => {
-      //       if(!error){        
-      //         loan.Condition = "Finished"
-      //         loan.Index = 3
-      //         this.setState({ loaner: [...this.state.loaner, loan] });
-      //         this.setState(oldState => ({
-      //           ShowAddLand: !oldState.ShowAddLand,
-      //           ShowTable: !oldState.ShowTable
-      //         }));
-              
-           
-      //    }});
-  
 }
 
   
@@ -159,6 +137,7 @@ let s = String.toString(0)
     web3.eth.defaultAccount = web3.eth.accounts[0];
     let s = String.toString(0)
     var success = 0;
+    
     var loan = lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
    var res = lendContract.methods.startLoan(contract.LoanerAddress,
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
@@ -172,10 +151,15 @@ let s = String.toString(0)
 
       contract.Condition = "Processed"
       contract.Index = this.state.count;
+      
       var res2 = lendContract.methods.getNumLoans()
           .call({from: contract.LoanerAddress, gas:3000000}, (error, transactionHash) => {
-          
-        });
+          if(!error){
+            alert(transactionHash)
+          }
+          });
+
+        
 
         this.count+=1;
         contract.Index = this.count;
@@ -199,8 +183,15 @@ let s = String.toString(0)
     checkLoan =(id)=> {
       //no clue on how to get the input for this function
       var s = String.toString(id)
-      var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+      var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+        for(var i = 0;i<this.state.loaner.length;i++){        
+          var index = this.state.loaner[i].Index;
+          if(i === index){
+            alert(lendContract.methods.checkLoan(0).send({from: account0, gas:3000000}));
+           return lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
+          }
     }
+  }
   
     getNumLoans(){
       return lendContract.methods.getNumLoans().call({from: account0, gas:3000000});

@@ -27,7 +27,7 @@ export default class Header extends Component {
   render() {
     return (
       <header style={headerStyle}>
-        <h1> Land Money App</h1>
+        <h1> Lend Money App</h1>
         <Link style={LinkStyle} to="/About">
           About
         </Link>
