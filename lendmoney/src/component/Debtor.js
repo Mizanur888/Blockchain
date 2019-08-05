@@ -93,11 +93,11 @@ class Debtor extends Component {
     let app = this;
 
 //we need to change the "from:" parameter  to the address in the table row , as well as the value 
-      var s = String.toString(id)
-      var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
       var a = String.toString(loan.Amount)
-
+      let s = String.toString(0)
+      var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
       var res = lendContract.methods.payLoan(id)
          .send({from: loan.LoanerAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}, (error, transactionHash) => {
             if(!error){        
@@ -133,27 +133,27 @@ class Debtor extends Component {
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
     web3.eth.defaultAccount = web3.eth.accounts[0];
-
-    //this method works and has error checking but react doesn't like how im adding objects to the state
-
+    let s = String.toString(0)
+    
+    var loan = lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
    var res = lendContract.methods.startLoan(contract.LoanerAddress,
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
      .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
         if(!error){        
           contract.Condition = "Processed"
 
-            lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
-              if(!error){
+            // lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
+            //   if(!error){
 
-                contract.Index = hash
+                
                 this.setState({ loaner: [...this.state.loaner, contract] });
 
                 this.setState(oldState => ({
                   ShowAddLand: !oldState.ShowAddLand,
                   ShowTable: !oldState.ShowTable
                   }));
-              }
-          });
+              // }
+          // });
      }
     });
 
@@ -161,9 +161,10 @@ class Debtor extends Component {
      
       }
 
-    checkLoan =(contract)=> {
+    checkLoan =(id)=> {
       //no clue on how to get the input for this function
-      
+      var s = String.toString(id)
+      var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
     }
   
     getNumLoans(){

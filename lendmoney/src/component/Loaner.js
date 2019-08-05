@@ -92,34 +92,40 @@ class Loaner extends Component {
     }
   
     pushAddmoneyToContract=(contract)=>{
-      let app = this;
-      const condition =1;
-      const loanerprivkey = '0xcc1647f982d0ca3d687ebeac4ffd6df2b8f42091c331acef8e7dd3784db61995';
-      const debtorprivkey = '0xf07406a6a565d7f6df9a0df7121b0e1b26138e03fe30364dc59d6cdcd527e5fb';
-      var loaner = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
-      var debtor = "0xa734d865d79871bec95acf86471b87921be81d66";
+    //   let app = this;
+    //   const condition =1;
+    //   ///how to get values from the form???
+    //   const loanerprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
+    //   const debtorprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
   
-      // lendContract.methods.startLoan(contract.LoanerAddress,
-      //    contract.DebtorAddress, contract.Amount, contract.InterestRate, 
-      //   contract.DueDate,condition,loanerprivkey,debtorprivkey)
-      //   .call()
-      //   .then((leand)=>{
-      //     app.setState({loaner:[...this.state.loaner,contract]})
-      //   });
-      
-      var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-      let account1 = '0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3'
-          
-      lendContract.methods.startLoan(this.state.LoanerAddress,
-        this.state.DebtorAddress, 12, 5, 1, condition,loanerprivkey,debtorprivkey)
-       .send()
-       .then((leand)=>{
-         app.setState({loaner:[...this.state.loaner,contract]})       
-       });
+    //   var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    //   let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
+    //   web3.eth.defaultAccount = web3.eth.accounts[0];
+    //   let s = String.toString(0)
+    //   //this method works and has error checking but react doesn't like how im adding objects to the state
+    //   var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
+    //  var res = lendContract.methods.startLoan(contract.LoanerAddress,
+    //   contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
+    //    .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
+    //       if(!error){        
+    //         contract.Condition = "Processed"
   
-       lendContract.methods.pleaseWork().call().then((leand)=>{
-        app.setState({loaner:[...this.state.loaner,contract]})
-       });
+    //           // lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
+    //           //   if(!error){
+  
+                  
+    //               this.setState({ loaner: [...this.state.loaner, contract] });
+  
+    //               this.setState(oldState => ({
+    //                 ShowAddLand: !oldState.ShowAddLand,
+    //                 ShowTable: !oldState.ShowTable
+    //                 }));
+    //             // }
+    //         // });
+    //    }
+    //   });
+  
+  
        
       }
   
