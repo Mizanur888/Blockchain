@@ -20,18 +20,18 @@ export class DebtorTable extends Component {
         <td>{loan.Condition}</td>
         <td>{loan.Index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
-          {this.state.isEmptyState && (
+        
             <button
-              onClick={this.props.PayLoan.bind(
+              onClick={this.props.payLoan.bind(
                 this,
-                loan.requestID,
-                this.state.isEmptyState
+                loan.Index
+                
               )}
               className="btn btn-success btn-xs"
             >
               Pay Loan
             </button>
-          )}
+        
         </td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (

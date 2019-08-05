@@ -92,6 +92,7 @@ class Loaner extends Component {
     }
   
     pushAddmoneyToContract=(contract)=>{
+      
     //   let app = this;
     //   const condition =1;
     //   ///how to get values from the form???
