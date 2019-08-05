@@ -104,10 +104,10 @@ class Debtor extends Component {
         var index = this.state.loaner[id].Index;
         if(i === index){
           alert(this.state.loaner[id].Index)
-          var res = lendContract.methods.payLoan(this.state.loaner[id].Index)
-          .send({from: this.state.loaner[id].LoanerAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[id].Amount)}, (error, transactionHash) => {            
+          var res = lendContract.methods.payLoan(0)
+          .send({from: this.state.loaner[id].DebtorAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[id].Amount)}, (error, transactionHash) => {            
             if(!error){                 
-              this.state.loaner[id].Condition = "DONE";
+              this.state.loaner[id].Condition = "PAID";
               this.forceUpdate();  
              }             
         });
@@ -152,19 +152,20 @@ class Debtor extends Component {
       contract.Condition = "Processed"
       contract.Index = this.state.count;
       
-      var res2 = lendContract.methods.getNumLoans()
-          .call({from: contract.LoanerAddress, gas:3000000}, (error, transactionHash) => {
-          if(!error){
-            alert(transactionHash)
-          }
-          });
+      // var res2 = lendContract.methods.getNumLoans()
+      //     .call({from: contract.LoanerAddress, gas:3000000}, (error, transactionHash) => {
+      //     if(!error){
+      //       alert(transactionHash)
+      //     }
+      //     });
 
         
 
         this.count+=1;
         contract.Index = this.count;
-        alert(res2.value)
+
         this.setState({ loaner: [...this.state.loaner, contract] });
+
         this.setState(oldState => ({
         ShowAddLand: !oldState.ShowAddLand,
         ShowTable: !oldState.ShowTable
@@ -180,8 +181,9 @@ class Debtor extends Component {
      
       }
 
-    checkLoan =(id)=> {
-      //no clue on how to get the input for this function
+    checkLoan = (id) => {
+ 
+
       var s = String.toString(id)
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
         for(var i = 0;i<this.state.loaner.length;i++){        
