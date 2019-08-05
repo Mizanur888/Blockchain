@@ -147,6 +147,9 @@ struct Loan {
         return everyLoan;
     }
     
+    function getNumLoans() public view returns(uint){
+        return CurLoanCount;
+    }
     function checkLoan(uint index) public returns( uint amount,
     address payable loaner,
     address payable debtor, 

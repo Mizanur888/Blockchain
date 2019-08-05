@@ -98,7 +98,7 @@ class Debtor extends Component {
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
       var a = String.toString(loan.Amount)
 
-      var res = lendContract.methods.PayLoan(id)
+      var res = lendContract.methods.payLoan(id)
          .send({from: loan.LoanerAddress, gas:3000000, value: web3.utils.toWei(loan.Amount)}, (error, transactionHash) => {
             if(!error){        
               loan.Condition = "Finished"
@@ -129,15 +129,12 @@ class Debtor extends Component {
     ///how to get values from the form???
     const loanerprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     const debtorprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
-    var loaner = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
-    var debtor = "0xa734d865d79871bec95acf86471b87921be81d66";
 
-    
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
     web3.eth.defaultAccount = web3.eth.accounts[0];
 
-    //this method works and has error checking 
+    //this method works and has error checking but react doesn't like how im adding objects to the state
 
    var res = lendContract.methods.startLoan(contract.LoanerAddress,
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
@@ -145,20 +142,21 @@ class Debtor extends Component {
         if(!error){        
           contract.Condition = "Processed"
 
-         
-     }});
+            lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
+              if(!error){
 
+                contract.Index = hash
+                this.setState({ loaner: [...this.state.loaner, contract] });
 
-     lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
-      contract.Index =hash
-      
-      this.setState({ loaner: [...this.state.loaner, contract] });
-
-      this.setState(oldState => ({
-        ShowAddLand: !oldState.ShowAddLand,
-        ShowTable: !oldState.ShowTable
-        }));
+                this.setState(oldState => ({
+                  ShowAddLand: !oldState.ShowAddLand,
+                  ShowTable: !oldState.ShowTable
+                  }));
+              }
+          });
+     }
     });
+
 
      
       }
@@ -169,7 +167,7 @@ class Debtor extends Component {
     }
   
     getNumLoans(){
-
+      return lendContract.methods.getNumLoans().call({from: account0, gas:3000000});
     }
     
 
