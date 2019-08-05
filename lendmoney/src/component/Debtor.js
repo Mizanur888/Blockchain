@@ -38,9 +38,6 @@ class Debtor extends Component {
       ]
     };
 
-
-
-
     this.AddLandMoney = this.AddLandMoney.bind(this);
 
     
@@ -65,7 +62,9 @@ class Debtor extends Component {
     }));
     console.log("ShowTable" + this.state.ShowTable + this.state.ShowAddLand);
   };
+
   EndLoan = id => { 
+    //i'm pretty sure this works but i don't know how to get the input from the table 
     var s = String.toString(id)
     var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
     var res = lendContract.methods.EndLoan(id)
@@ -88,6 +87,8 @@ class Debtor extends Component {
       return res
     }
   }
+
+
   PayLoan = id => {
     let app = this;
 
@@ -131,13 +132,6 @@ class Debtor extends Component {
     var loaner = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     var debtor = "0xa734d865d79871bec95acf86471b87921be81d66";
 
-    // lendContract.methods.startLoan(contract.LoanerAddress,
-    //    contract.DebtorAddress, contract.Amount, contract.InterestRate, 
-    //   contract.DueDate,condition,loanerprivkey,debtorprivkey)
-    //   .call()
-    //   .then((leand)=>{
-    //     app.setState({loaner:[...this.state.loaner,contract]})
-    //   });
     
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
     let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
@@ -149,27 +143,29 @@ class Debtor extends Component {
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
      .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
         if(!error){        
-          contract.Condition = "Accepted"
-          contract.Index = 3
-          this.setState({ loaner: [...this.state.loaner, contract] });
-          this.setState(oldState => ({
-            ShowAddLand: !oldState.ShowAddLand,
-            ShowTable: !oldState.ShowTable
-          }));
-          
-       
+          contract.Condition = "Processed"
+
+         
      }});
 
-    
-    
-     
+
+     lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
+      contract.Index =hash
+      
+      this.setState({ loaner: [...this.state.loaner, contract] });
+
+      this.setState(oldState => ({
+        ShowAddLand: !oldState.ShowAddLand,
+        ShowTable: !oldState.ShowTable
+        }));
+    });
+
      
       }
 
     checkLoan =(contract)=> {
-      var lend = lendContract.methods.checkLoan(contract.Index).send({from: contract.DebtorAddress, gas:3000000, value: Web3.utils.toWei(contract.Amount)}).then((lend)=>{      
-          
-      });
+      //no clue on how to get the input for this function
+      
     }
   
     getNumLoans(){

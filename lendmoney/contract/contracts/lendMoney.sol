@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract lendMoney{
     
@@ -142,6 +143,9 @@ struct Loan {
         return allDebtors;
     }
     
+    function getAllLoans() public view returns(Loan[] memory){
+        return everyLoan;
+    }
     
     function checkLoan(uint index) public returns( uint amount,
     address payable loaner,
@@ -155,10 +159,10 @@ struct Loan {
     
     Loan storage  tmploan = allloans[index];
            uint curtime = now;
-            if(curtime > tmploan.dueDate){
-                tmploan.loanFinished = true;
-                tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
-            }
+            // if(curtime > tmploan.dueDate){
+            //     tmploan.loanFinished = true;
+            //     tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
+            // }
                         
             return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
     }
