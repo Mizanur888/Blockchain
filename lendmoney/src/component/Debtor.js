@@ -197,7 +197,7 @@ class Debtor extends Component {
       ShowTable: !oldState.ShowTable
     }));
 
-    this.setState({ Index: res });
+    // this.setState({ Index: res });
     alert(this.state.Index);
     //this.state.loaner.index
   };
@@ -256,21 +256,38 @@ class Debtor extends Component {
         // };
         // this.setState({ tableContents: test });
         //  this.setState({ Index: test.amount });
+        for(var i =0; i < 10; i++){
+          if(loan[i]!=null){
+            var e = this.state.tableContents.concat([
+              {
+                loaner: loan[i].loaner,
+                debtor: loan[i].debtor,
+                amount: parseInt(loan[i].amount, 16),
+                interest: parseInt(loan[i].interest, 16),
+                dueDate: parseInt(loan[i].dueDate, 16),
+                condition: parseInt(loan[i].condition, 16)
+              }
+            ])
 
-        this.setState({
-          tableContents: [
-            {
-              loaner: loan[0].loaner,
-              debtor: loan[0].debtor,
-              amount: parseInt(loan[0].amount, 16),
-              interest: parseInt(loan[0].interest, 16),
-              dueDate: parseInt(loan[0].dueDate, 16),
-              condition: parseInt(loan[0].condition, 16)
-            }
-          ]
-        });
 
-        this.forceUpdate();
+            this.setState({tableContents: e})
+          }
+          
+        // this.setState({
+        //   // tableContents: [
+        //   //   {
+        //   //     loaner: loan[i].loaner,
+        //   //     debtor: loan[i].debtor,
+        //   //     amount: parseInt(loan[i].amount, 16),
+        //   //     interest: parseInt(loan[i].interest, 16),
+        //   //     dueDate: parseInt(loan[i].dueDate, 16),
+        //   //     condition: parseInt(loan[i].condition, 16)
+        //   //   }
+        //   // ]
+        // });
+      }
+      this.forceUpdate();
+        
         // this.setState({ Index: parseInt(test.interest, 16) });
       });
   };
