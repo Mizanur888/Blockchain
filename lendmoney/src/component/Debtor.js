@@ -147,13 +147,9 @@ class Debtor extends Component {
     });
 
 
-      contract.Condition = "Processed"
-      contract.Index = this.state.count;
-              
-
-      this.count+=1;
+                
       contract.Index = this.count;
-
+      contract.Condition = "Processed"
       this.setState({ loaner: [...this.state.loaner, contract] });
 
       this.setState(oldState => ({
@@ -167,21 +163,34 @@ class Debtor extends Component {
   
       }
 
-    checkLoan = (id) => {
+      getAllLoans(){
+        var tmp =  lendContract.methods.getAllLoans().call({from: account0, gas:3000000}, (error, hash, result, amount, loaner, debtor)=>{ 
+
+        });
+        alert(tmp);
+      }
+
+
+      checkLoan = (id) => {
+        var tmp;
+      
+       
+       alert(lendContract.methods.getNumLoans.call({from: account0, gas:3000000}))
+
+       var tmp = function async(){ var out = await lendContract.methods.getNumLoans.call({from: account0, gas:3000000});}
+          
+       
+
+      return  lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
+  }
+  
  
 
-      var s = String.toString(id)
-      var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-        for(var i = 0;i<this.state.loaner.length;i++){        
-          var index = this.state.loaner[i].Index;
-          if(i === index){
-            alert(lendContract.methods.checkLoan(0).send({from: account0, gas:3000000}));
-           return lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
-          }
-    }
-  }
-
   getNumLoans(){
+    var e = lendContract.methods.getNumLoans().call({from: account0, gas:3000000}, (error, res)=>{
+      alert(JSON.parse(e));
+    });
+    alert(e);
     return lendContract.methods.getNumLoans().call({from: account0, gas:3000000});
   }
   
@@ -240,7 +249,7 @@ class Debtor extends Component {
             
         <div>
           {this.state.ShowTable && (
-            <DebtorTable loaner={this.state.loaner} payLoan={this.PayLoan} />
+            <DebtorTable loaner={this.state.loaner} payLoan={this.PayLoan} checkLoan={this.checkLoan} getNumLoans={this.getNumLoans} getAllLoans={this.getAllLoans}/>
           )}
         </div>
         <div>

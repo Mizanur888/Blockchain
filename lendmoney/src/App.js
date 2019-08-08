@@ -100,17 +100,14 @@ class App extends Component {
             path="/App"
             render={props => (
               <React.Fragment>
-                <Loaner
-                  loaner={this.state.loaner}
-                  getApproved={this.getApproved}
-                  getReject={this.getReject}
-                />
+                
               </React.Fragment>
             )}
           />
 
           <Route exact path="/" component={Login} />
           <Route exact path="/Debtor" component={Debtor} />
+          <Route exact path="/Loaner" component={Loaner} />
         </div>
       </Router>
     );
