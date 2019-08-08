@@ -188,18 +188,14 @@ class Debtor extends Component {
         }
       );
 
-    //contract.Index = this.count;
-    //contract.condition = "Processed";
+    contract.Index = this.count;
+    contract.condition = "Processed";
     this.setState({ tableContents: [...this.state.tableContents, contract] });
 
     this.setState(oldState => ({
       ShowAddLand: !oldState.ShowAddLand,
       ShowTable: !oldState.ShowTable
     }));
-
-    this.setState({ Index: res });
-    alert(this.state.Index);
-    //this.state.loaner.index
   };
 
   getAllLoans = () => {
@@ -244,32 +240,23 @@ class Debtor extends Component {
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
       .then(loan => {
-        // let test = {
-        //   loaner: loan[0].lonaer,
-        //   debtor: loan[0].debtor,
-        //   amount: parseInt(loan[0].amount, 16),
-        //   interest: loan[0].interest,
-        //   dueDate: loan[0].duedate,
-        //   condition: loan[0].condition
-        //   // loanerprivkey: loan[0].loanerprivkey,
-        //   // debtorprivkey: loan[0].debtorprivkey
-        // };
-        // this.setState({ tableContents: test });
-        //  this.setState({ Index: test.amount });
-
-        this.setState({
-          tableContents: [
-            {
-              loaner: loan[0].loaner,
-              debtor: loan[0].debtor,
-              amount: parseInt(loan[0].amount, 16),
-              interest: parseInt(loan[0].interest, 16),
-              dueDate: parseInt(loan[0].dueDate, 16),
-              condition: parseInt(loan[0].condition, 16)
-            }
-          ]
+        loan.forEach(element => {
+          this.forceUpdate();
+          alert("Length: " + element.length);
+          this.setState({
+            tableContents: [
+              {
+                loaner: element.loaner,
+                debtor: element.debtor,
+                amount: parseInt(element.amount, 16),
+                interest: parseInt(element.interest, 16),
+                dueDate: parseInt(element.dueDate, 16),
+                condition: parseInt(element.condition, 16)
+              }
+            ]
+          });
+          this.forceUpdate();
         });
-
         this.forceUpdate();
         // this.setState({ Index: parseInt(test.interest, 16) });
       });
