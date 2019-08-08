@@ -10,38 +10,30 @@ export class DebtorTable extends Component {
       backgroundColor: item.state === "pending" ? "#ccc" : "#00ff00"
     };
   };
+
   render() {
-    let loanMoney = this.props.loaner.map(loan => (
+    let loanMoney = this.props.tableContents.map(loan => (
       <tr style={this.checkforItem(loan)}>
-        <th scope="row">{loan.LoanerAddress}</th>
-        <td>{loan.DebtorAddress}</td>
-        <td>{loan.Amount}</td>
-        <td>{loan.InterestRate}</td>
-        <td>{loan.Condition}</td>
-        <td>{loan.Index}</td>
+        <th scope="row">{loan.loaner}</th>
+        <td>{loan.debtor}</td>
+        <td>{loan.amount}</td>
+        <td>{loan.interest}</td>
+        <td>{loan.condition}</td>
+        <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
-        
-            <button
-              onClick={this.props.payLoan.bind(
-                this,
-                loan.Index
-                
-              )}
-              className="btn btn-success btn-xs"
-            >
-              Pay Loan
-            </button>
-        
+          <button
+            onClick={this.props.payLoan.bind(this, loan.Index)}
+            className="btn btn-success btn-xs"
+          >
+            Pay Loan
+          </button>
         </td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (
             <button
-            /////this function isn't working, i think the function is written properly 
-            /// but this ui element will not call it 
-              onClick={this.props.getAllLoans.bind(
-                this,
-                loan.Index
-              )}
+              /////this function isn't working, i think the function is written properly
+              /// but this ui element will not call it
+              onClick={this.props.getAllLoans.bind(this, loan.Index)}
               className="btn btn-success btn-xs"
             >
               Update Info
@@ -61,7 +53,7 @@ export class DebtorTable extends Component {
               <th scope="col">Interest Rate</th>
               <th scope="col">Status</th>
               <th scope="col">Index</th>
-              <th scope="col">Action</th>              
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>{loanMoney}</tbody>

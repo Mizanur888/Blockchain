@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 contract lendMoney{
     
 struct Loan {
-    uint amount;
+    uint256 amount;
     address payable loaner;
     address payable debtor; 
     uint index;
