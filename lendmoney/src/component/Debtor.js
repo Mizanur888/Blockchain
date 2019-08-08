@@ -100,8 +100,6 @@ class Debtor extends Component {
       for(var i = 0;i<this.state.loaner.length;i++){        
         var index = this.state.loaner[id].Index;
         if(i === index){
-<<<<<<< HEAD
-          
           var e = this.state.loaner[id].InterestRate + parseInt(this.state.loaner[id].Amount);
           
           var res = lendContract.methods.payLoan(this.state.loaner[id].Index)
@@ -116,13 +114,7 @@ class Debtor extends Component {
               }
              }else{
               this.state.loaner[id].Condition = "ERR";
-=======
-          alert(this.state.loaner[id].Index)
-          var res = lendContract.methods.payLoan(this.state.loaner[id].Index, this.state.loaner[id].LoanerAddress)
-          .send({from: this.state.loaner[id].DebtorAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[id].Amount)}, (error, transactionHash) => {            
-            if(!error){                 
-              this.state.loaner[id].Condition = "DONE";
->>>>>>> test
+
               this.forceUpdate();  
              }             
         });
