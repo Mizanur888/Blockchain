@@ -38,7 +38,7 @@ export class DebtorTable extends Component {
             <button
             /////this function isn't working, i think the function is written properly 
             /// but this ui element will not call it 
-              onClick={this.props.checkLoan.bind(
+              onClick={this.props.getAllLoans.bind(
                 this,
                 loan.Index
               )}

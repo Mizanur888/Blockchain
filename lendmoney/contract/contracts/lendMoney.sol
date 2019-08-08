@@ -19,6 +19,7 @@ struct Loan {
     mapping(address => address) debtors;
     
     mapping(uint => Loan) allloans;
+    
     Loan[] everyLoan;
     address[] allLoaners;
     address[] allDebtors;
@@ -27,7 +28,7 @@ struct Loan {
             return CurLoanCount;
     }
     //add params
-    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public payable returns (uint){
+    function startLoan(address payable _loaner, address payable _debtor, uint _amount, uint _interest, uint _duedate, uint _condition, address loanerprivkey, address debtorprivkey) public payable returns (uint256){
         Loan memory newloan =  Loan({
            amount: _amount,
            loaner: _loaner,
@@ -40,7 +41,7 @@ struct Loan {
            requestEnd: false
         });
     
-        
+        everyLoan.push(newloan);
         allloans[CurLoanCount] = newloan;
         allLoaners.push(_loaner);
         allDebtors.push(_debtor);
@@ -51,7 +52,7 @@ struct Loan {
         
         CurLoanCount++;
         
-        return newloan.index;
+        return everyLoan.length;
     }
     
     
@@ -147,6 +148,9 @@ struct Loan {
         return allDebtors;
     }
     
+    function func() public view returns(uint count){
+        return everyLoan.length;
+    }
     function getAllLoans() public view returns(Loan[] memory){
         return everyLoan;
     }
@@ -154,27 +158,42 @@ struct Loan {
     function getNumLoans() public view returns(uint){
         return CurLoanCount;
     }
-    function checkLoan(uint index) public returns( uint amount,
-    address payable loaner,
-    address payable debtor, 
-    uint _index,
-    uint interest,
-    uint dueDate,
-    uint condition,
-    bool loanFinished,
-    bool requestEnd){
+    // function checkLoan(uint index) public returns( uint amount,
+    // address payable loaner,
+    // address payable debtor, 
+    // uint _index,
+    // uint interest,
+    // uint dueDate,
+    // uint condition,
+    // bool loanFinished,
+    // bool requestEnd){
+        
+    function checkLoan() public returns(uint256){
+    //Loan memory tmploan = allloans[index];
+    uint curtime = 0;
     
-    Loan memory tmploan = allloans[index];
-    uint curtime = now;
-    // if(curtime > tmploan.dueDate){
-    //     tmploan.loanFinished = true;
-    //     tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
-    // }
-                    
-    return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
+    for(uint i = 0;i<everyLoan.length;i++){
     }
+    
+    
+    return curtime;
+    // return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
+    }
+    
+    
+    function stringToBytes32(string memory source) private pure returns (bytes32 result) {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
+    
+        assembly {
+            result := mload(add(source, 32))
+        }
+    }
+
+}
     
     //check below comment on how a date is a uint (below is needed for frontend interaction with the contract)
     //https://ethereum.stackexchange.com/questions/32173/how-to-handle-dates-in-solidity-and-web3
     
-}

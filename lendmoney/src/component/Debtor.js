@@ -136,7 +136,7 @@ class Debtor extends Component {
     let s = String.toString(0)
     var success = 0;
     
-    var loan = lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
+    // var loan = lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
    var res = lendContract.methods.startLoan(contract.LoanerAddress,
     contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
      .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
@@ -163,11 +163,21 @@ class Debtor extends Component {
   
       }
 
-      getAllLoans(){
-        var tmp =  lendContract.methods.getAllLoans().call({from: account0, gas:3000000}, (error, hash, result, amount, loaner, debtor)=>{ 
+      getAllLoans=()=>{
+        var tmp = [];
+        alert("calling get All loans")
+        lendContract.methods.getAllLoans().call({from: account0, gas:3000000}).then((loan)=>{
 
+          
+            alert(loan);
+            tmp = loan;
         });
         alert(tmp);
+        this.state.loaner.push(tmp)
+        console.log(tmp);
+        console.log(this.state.loaner.length)
+        this.forceUpdate()
+        
       }
 
 
@@ -183,6 +193,9 @@ class Debtor extends Component {
 
       return  lendContract.methods.checkLoan(0).send({from: account0, gas:3000000});
   }
+
+
+  
   
  
 
