@@ -36,6 +36,8 @@ export class DebtorTable extends Component {
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (
             <button
+            /////this function isn't working, i think the function is written properly 
+            /// but this ui element will not call it 
               onClick={this.props.checkLoan}
               className="btn btn-success btn-xs"
             >
@@ -50,8 +52,8 @@ export class DebtorTable extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Request ID</th>
-              <th scope="col">Sender Address</th>
+              <th scope="col">Loaner Address</th>
+              <th scope="col">Debtor Address</th>
               <th scope="col">Amount</th>
               <th scope="col">Interest Rate</th>
               <th scope="col">Status</th>

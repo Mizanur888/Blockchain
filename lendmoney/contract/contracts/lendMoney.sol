@@ -99,11 +99,23 @@ struct Loan {
     
     function payLoan(uint index, address payable loaner) public payable returns(bool){
         //require that sender has the money 
-        require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");
         Loan storage  tmploan = allloans[index];
+<<<<<<< HEAD
          loaner.transfer(msg.value);
          
         // if(!tmploan.loanFinished){
+=======
+        require(msg.value != 0 && msg.value > 0 && tmploan.loanFinished != true , "Amount must be non negative and greater than one");
+        
+        if(!tmploan.loanFinished){
+            tmploan.loanFinished = true;
+            uint amount = msg.value;
+            uint change = 0;
+            if(amount > tmploan.amount){
+                tmploan.amount = 0;
+                change = amount - tmploan.amount;
+            }
+>>>>>>> master
             
         //     uint amount = msg.value;
         //     uint change = 0;
@@ -151,9 +163,6 @@ struct Loan {
         return everyLoan;
     }
     
-    function getNumLoans() public view returns(uint){
-        return CurLoanCount;
-    }
     function checkLoan(uint index) public returns( uint amount,
     address payable loaner,
     address payable debtor, 

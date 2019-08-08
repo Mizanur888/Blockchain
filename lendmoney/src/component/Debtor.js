@@ -42,15 +42,12 @@ class Debtor extends Component {
     };
 
     this.AddLandMoney = this.AddLandMoney.bind(this);
-
-    
   }
 
   componentDidMount() {
     console.log(this.props.history.location.state.privateKey);
     console.log(this.props.history.location.Condition);
   }
-
 
   signout = e => {
     this.props.history.push({
@@ -103,27 +100,36 @@ class Debtor extends Component {
       for(var i = 0;i<this.state.loaner.length;i++){        
         var index = this.state.loaner[id].Index;
         if(i === index){
+<<<<<<< HEAD
           alert(this.state.loaner[id].Index)
           var res = lendContract.methods.payLoan(this.state.loaner[id].Index, this.state.loaner[id].LoanerAddress)
           .send({from: this.state.loaner[id].DebtorAddress, gas:3000000, value: web3.utils.toWei(this.state.loaner[id].Amount)}, (error, transactionHash) => {            
             if(!error){                 
               this.state.loaner[id].Condition = "DONE";
+=======
+          
+          var e = this.state.loaner[id].InterestRate + parseInt(this.state.loaner[id].Amount);
+          
+          var res = lendContract.methods.payLoan(this.state.loaner[id].Index)
+          .send({from: this.state.loaner[id].DebtorAddress, gas:3000000, value: web3.utils.toWei(e)}, (error, transactionHash) => {            
+            if(!error){
+              if(parseInt(this.state.loaner[id].InterestRate) > 0){                 
+              this.state.loaner[id].Condition = "PAID WITH INTEREST";
+              this.forceUpdate();  
+              }else{
+              this.state.loaner[id].Condition = "PAID";
+              this.forceUpdate();  
+              }
+             }else{
+              this.state.loaner[id].Condition = "ERR";
+>>>>>>> master
               this.forceUpdate();  
              }             
         });
         }
       }
       
-      var loan = lendContract.methods.checkLoan(0).call({from: account0, gas:3000000}, (error, hash)=>{
-        if(!error){
-          alert(hash)
-        }
-      });
-      
 }
-
-  
-
 
   pushAddmoneyToContract=(contract)=>{
     let app = this;
@@ -151,37 +157,27 @@ class Debtor extends Component {
 
       contract.Condition = "Processed"
       contract.Index = this.state.count;
-      
-      var res2 = lendContract.methods.getNumLoans()
-          .call({from: contract.LoanerAddress, gas:3000000}, (error, transactionHash) => {
-          if(!error){
-            alert(transactionHash)
-          }
-          });
+              
 
-        
+      this.count+=1;
+      contract.Index = this.count;
 
-        this.count+=1;
-        contract.Index = this.count;
-        alert(res2.value)
-        this.setState({ loaner: [...this.state.loaner, contract] });
-        this.setState(oldState => ({
-        ShowAddLand: !oldState.ShowAddLand,
-        ShowTable: !oldState.ShowTable
-        }));
+      this.setState({ loaner: [...this.state.loaner, contract] });
 
-        this.setState({Index:res});
-        alert(this.state.Index);
-        //this.state.loaner.index
-    
-    
-      
+      this.setState(oldState => ({
+      ShowAddLand: !oldState.ShowAddLand,
+      ShowTable: !oldState.ShowTable
+      }));
 
-     
+      this.setState({Index:res});
+      alert(this.state.Index);
+      //this.state.loaner.index
+  
       }
 
-    checkLoan =(id)=> {
-      //no clue on how to get the input for this function
+    checkLoan = (id) => {
+ 
+
       var s = String.toString(id)
       var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
         for(var i = 0;i<this.state.loaner.length;i++){        
@@ -192,11 +188,11 @@ class Debtor extends Component {
           }
     }
   }
+
+  getNumLoans(){
+    return lendContract.methods.getNumLoans().call({from: account0, gas:3000000});
+  }
   
-    getNumLoans(){
-      return lendContract.methods.getNumLoans().call({from: account0, gas:3000000});
-    }
-    
 
   addLandMoney = (
     LoanerAddress,
@@ -222,8 +218,6 @@ class Debtor extends Component {
   }
   
 
-
-  
   render() {
     return (
       <div className="container">
