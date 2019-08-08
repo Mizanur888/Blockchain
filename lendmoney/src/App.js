@@ -4,6 +4,7 @@ import Login from "./component/Login";
 import Loaner from "./component/Loaner";
 import Header from "./component/UI/Header";
 import Debtor from "./component/Debtor";
+import About from "./component/UI/About";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { lendContract, account0 } from "./config";
 
@@ -66,6 +67,7 @@ class App extends Component {
           <Route exact path="/" component={Login} />
           <Route exact path="/Debtor" component={Debtor} />
           <Route exact path="/Loaner" component={Loaner} />
+          <Route exact path="/About" component={About} />
         </div>
       </Router>
     );

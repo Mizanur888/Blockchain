@@ -179,16 +179,16 @@ class Loaner extends Component {
         >
           Update Table
         </button>
-        <div>
-          <input
-            type="Index"
-            name="Index"
-            id="Index"
-            placeholder="Index"
-            value={this.state.Index}
-            onChange={this.onChange}
-          />
-        </div>
+
+        <input
+          type="Index"
+          name="Index"
+          id="Index"
+          placeholder="Index"
+          value={this.state.Index}
+          onChange={this.onChange}
+        />
+
         <div
           style={{
             color: "black",
