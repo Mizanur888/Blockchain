@@ -97,31 +97,34 @@ struct Loan {
     }
     
     
-    function payLoan(uint index) public payable returns(bool){
+    function payLoan(uint index, address payable loaner) public payable returns(bool){
         //require that sender has the money 
+        require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");
         Loan storage  tmploan = allloans[index];
-        require(msg.value != 0 && msg.value > 0 && tmploan.loanFinished != true , "Amount must be non negative and greater than one");
-        
-        if(!tmploan.loanFinished){
-            tmploan.loanFinished = true;
-            uint amount = msg.value;
-            uint change = 0;
-            if(amount > tmploan.amount){
-                tmploan.amount = 0;
-                change = amount - tmploan.amount;
-            }
+         loaner.transfer(msg.value);
+         
+        // if(!tmploan.loanFinished){
             
-            if(change!=0){
-                //if the debtor 
-                tmploan.loaner.transfer(change);
-            }
+        //     uint amount = msg.value;
+        //     uint change = 0;
+        //     if(amount > tmploan.amount){
+        //         tmploan.amount = 0;
+        //         change = amount - tmploan.amount;
+        //     }
+        //     if(change!=0){
+        //         //if the debtor 
+        //     //    tmploan.loaner.transfer(change);
+        //     }
+
+        //     // tmploan.loaner.transfer(msg.value);
             
-            if(amount == 0){
-                tmploan.loanFinished = true;
-                return true;
-            }
-            return false;
-        }
+        //     if(amount == 0){
+        //         tmploan.loanFinished = true;
+        //         return true;
+        //     }
+        //     return false;
+        // }
+      
     }
     
     
@@ -148,6 +151,9 @@ struct Loan {
         return everyLoan;
     }
     
+    function getNumLoans() public view returns(uint){
+        return CurLoanCount;
+    }
     function checkLoan(uint index) public returns( uint amount,
     address payable loaner,
     address payable debtor, 
@@ -158,14 +164,14 @@ struct Loan {
     bool loanFinished,
     bool requestEnd){
     
-    Loan storage  tmploan = allloans[index];
-           uint curtime = now;
-            // if(curtime > tmploan.dueDate){
-            //     tmploan.loanFinished = true;
-            //     tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
-            // }
-                        
-            return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
+    Loan memory tmploan = allloans[index];
+    uint curtime = now;
+    // if(curtime > tmploan.dueDate){
+    //     tmploan.loanFinished = true;
+    //     tmploan.loaner.transfer(tmploan.amount + tmploan.interest);
+    // }
+                    
+    return(tmploan.amount,tmploan.loaner, tmploan.debtor, tmploan.index, tmploan.interest, tmploan.dueDate, tmploan.condition, tmploan.loanFinished, tmploan.requestEnd); 
     }
     
     //check below comment on how a date is a uint (below is needed for frontend interaction with the contract)

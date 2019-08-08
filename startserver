@@ -1,4 +1,29 @@
 #!/bin/bash
 
 
-ganache-cli -m "solution become theory know tide endless whip kidney abandon chronic repeat shine"
+
+sleep 3
+
+osascript -e'
+tell application "iTerm2"
+    set newWindow to (create window with default profile)
+    tell current session of newWindow
+        set the name to "ganache"
+        write text "ganache-cli -m "solution become theory know tide endless whip kidney abandon chronic repeat shine""
+
+	write text "docker logs avs-proxy -f"
+    end tell
+end tell'
+
+
+
+osascript -e'
+tell application "iTerm2"
+    set newWindow to (create window with default profile)
+    tell current session of newWindow
+        set the name to "truffle"
+        write text "cd /Users/harrisonaffel/desktop/finblock/blockchain/lendmoney/contract"
+        write text "truffle migrate"
+	write text "docker logs avs-proxy -f"
+    end tell
+end tell'
