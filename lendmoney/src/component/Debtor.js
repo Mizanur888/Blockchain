@@ -106,7 +106,7 @@ class Debtor extends Component {
       new Web3.providers.HttpProvider("http://localhost:8545")
     );
     for (var i = 0; i < this.state.tableContents.length; i++) {
-      var index = this.state.tableContents[id].Index;
+      var index = this.state.tableContents[id].index;
       if (i === index) {
         var e =
           this.state.tableContents[id].interest +
@@ -256,7 +256,13 @@ class Debtor extends Component {
         // };
         // this.setState({ tableContents: test });
         //  this.setState({ Index: test.amount });
+
+
+        ///check that the table is not longer loan.length
+
         for(var i =0; i < 10; i++){
+          //if length is greater than tot contracts do not add 
+          //if(loan.length !> )
           if(loan[i]!=null){
             var e = this.state.tableContents.concat([
               {
@@ -265,6 +271,7 @@ class Debtor extends Component {
                 amount: parseInt(loan[i].amount, 16),
                 interest: parseInt(loan[i].interest, 16),
                 dueDate: parseInt(loan[i].dueDate, 16),
+                index: parseInt(loan[i].index),
                 condition: parseInt(loan[i].condition, 16)
               }
             ])
