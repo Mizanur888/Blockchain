@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import DebtorTable from "./UI/LoanerTable";
-import AddLandMoney from "./UI/AddLandMoney";
+
 import LandMoney from "../Model/LandMoney";
 import { lendContract, account0 } from "../config";
 import Web3 from "web3";
@@ -12,187 +12,218 @@ import {
   withRouter
 } from "react-router-dom";
 
-
 class Loaner extends Component {
-    constructor(props) {
-      super(props);
-      
-      this.privateKey = this.props.history.location.state.privateKey;
-      console.log("Private Key: " + this.privateKey);
-      console.log("Condiation: " + this.props.history.location.Condition);
-  
-      
-      this.state = {
-        ShowTable: true,
-        ShowAddLand: false,
-        loaner: [
-          {
-            LoanerAddress: "a309cf",
-            DebtorAddress: "ar29292#4112erc",
-            Amount: "5ETH",
-            InterestRate: "5%",
-            DueDate: "23-2-19",
-            Condition: "pending"
-          },
-          {
-            LoanerAddress: "a309cf",
-            DebtorAddress: "ar29292#4112erc",
-            Amount: "5ETH",
-            InterestRate: "5%",
-            DueDate: "23-2-19",
-            Condition: "pending"
-          }
-        ]
-      };
-  
-      this.AddLandMoney = this.AddLandMoney.bind(this);
-  
-      
-    }
-  
-    componentDidMount() {
-      console.log(this.props.history.location.state.privateKey);
-      console.log(this.props.history.location.Condition);
-    }
-  
-  
-    signout = e => {
-      this.props.history.push({
-        pathname: "/"
-      });
-    };
-    
-    AddLandMoney = e => {
-      this.setState(oldState => ({
-        ShowAddLand: !oldState.ShowAddLand,
-        ShowTable: !oldState.ShowTable
-      }));
-      console.log("ShowTable" + this.state.ShowTable + this.state.ShowAddLand);
-    };
-  
-    PayLoan = id => {
-      this.setState({
-        loaner: this.state.loaner.map(loan => {
-          if (loan.requestID === id) {
-            loan.state = "Approved";
-          }
-          return loan;
-        })
-      });
-    };
+  constructor(props) {
+    super(props);
 
-    endLoan(){
-      let app = this
+    this.privateKey = this.props.history.location.state.privateKey;
+    console.log("Private Key: " + this.privateKey);
+    console.log("Condiation: " + this.props.history.location.Condition);
 
-      lendContract.methods.endLoan(0)
-       .send()
-       .then((leand)=>{
-         app.setState({loaner:[...this.state.loaner.pop]})       
-       });
-    }
-  
-    pushAddmoneyToContract=(contract)=>{
-      
-    //   let app = this;
-    //   const condition =1;
-    //   ///how to get values from the form???
-    //   const loanerprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
-    //   const debtorprivkey =  "0x26c74ded3a717bf2a549de43213db180b7a57af0";
-  
-    //   var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-    //   let account1 = "0x74267bc109b6938192b2dcdd2ad69b23a8f1e7f3"
-    //   web3.eth.defaultAccount = web3.eth.accounts[0];
-    //   let s = String.toString(0)
-    //   //this method works and has error checking but react doesn't like how im adding objects to the state
-    //   var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
-    //  var res = lendContract.methods.startLoan(contract.LoanerAddress,
-    //   contract.DebtorAddress, contract.Amount, contract.InterestRate, contract.DueDate, condition,loanerprivkey,debtorprivkey)
-    //    .send({from: contract.LoanerAddress, gas:3000000, value: web3.utils.toWei(contract.Amount)}, (error, transactionHash) => {
-    //       if(!error){        
-    //         contract.Condition = "Processed"
-  
-    //           // lendContract.methods.getNumLoans().call({from: contract.LoanerAddress, gas:3000000}, (error, hash)=>{
-    //           //   if(!error){
-  
-                  
-    //               this.setState({ loaner: [...this.state.loaner, contract] });
-  
-    //               this.setState(oldState => ({
-    //                 ShowAddLand: !oldState.ShowAddLand,
-    //                 ShowTable: !oldState.ShowTable
-    //                 }));
-    //             // }
-    //         // });
-    //    }
-    //   });
-  
-  
-       
-      }
-  
-  
-    addLandMoney = (
-      LoanerAddress,
-      DebtorAddress,
-      Amount,
-      InterestRate,
-      DueDate
-    ) => {
-      const landMoney = {
-        LoanerAddress,
-        DebtorAddress,
-        Amount,
-        InterestRate,
-        DueDate,
-        Condition:'Pending'
-      };
-      this.pushAddmoneyToContract(landMoney);
-      this.setState({ loaner: [...this.state.loaner, landMoney] });
-      this.setState(oldState => ({
-        ShowAddLand: !oldState.ShowAddLand,
-        ShowTable: !oldState.ShowTable
-      }));
-    }
-    render() {
-      return (
-        <div className="container">
-          <button
-            style={{ textAlign: "center", width: "300px", margin: "10px" }}
-            onClick={this.AddLandMoney}
-            type="button"
-            className="btn btn-info mb-1"
-          >
-            AddLend
-          </button>
-          <div
-            style={{
-              color: "black",
-              float: "right",
-              width: "0px",
-              margin: "10px"
-            }}
-          >
-            <button
-              onClick={this.signout}
-              type="button"
-              className="btn btn-warning mb-2"
-            >
-              Signout
-            </button>
-          </div>
-              
-          <div>
-            {this.state.ShowTable && (
-              <DebtorTable loaner={this.state.loaner} PayLoan={this.PayLoan} />
-            )}
-          </div>
-          <div>
-            {this.state.ShowAddLand && (
-              <AddLandMoney addLandMoney={this.addLandMoney} />
-            )}
-          </div>
-        </div>
-      );  
-    }
+    this.state = {
+      ShowTable: true,
+      ShowAddLand: false,
+      Index: -1,
+      loaner: [
+        {
+          LoanerAddress: "a309cf",
+          DebtorAddress: "ar29292#4112erc",
+          Amount: "5ETH",
+          InterestRate: "5%",
+          DueDate: "23-2-19",
+          Condition: "pending",
+          showRegect: true,
+          showApprove: true,
+          index: -1
+        },
+        {
+          LoanerAddress: "a309cfe",
+          DebtorAddress: "ar29292#4112erc",
+          Amount: "5ETH",
+          InterestRate: "5%",
+          DueDate: "23-2-19",
+          Condition: "pending",
+          showRegect: true,
+          showApprove: true,
+          index: -1
+        }
+      ]
+    };
   }
-export default withRouter(Loaner);
+
+  componentDidMount() {
+    console.log(this.props.history.location.state.privateKey);
+    console.log(this.props.history.location.Condition);
+  }
+
+  signout = e => {
+    this.props.history.push({
+      pathname: "/"
+    });
+  };
+
+  checkforItem = item => {
+    return {
+      backgroundColor: item.state === "pending" ? "#ccc" : "#00ff00"
+    };
+  };
+  payLoan = id => {
+    loaner: this.state.loaner.map(loan => {
+      if (loan.requestID === id) {
+        loan.Condition = "Approved";
+      }
+      return loan;
+    });
+  };
+  getRegect = id => {
+    alert("hello");
+    this.setState({
+      loaner: this.state.loaner.map(loan => {
+        if (loan.LoanerAddress === id) {
+          loan.Condition = "pending";
+          loan.showApprove = false;
+
+          this.forceUpdate();
+        }
+        return loan;
+      })
+    });
+  };
+
+  getApproved = id => {
+    alert("hello");
+    this.setState({
+      loaner: this.state.loaner.map(loan => {
+        if (loan.LoanerAddress === id) {
+          loan.Condition = "Approved";
+          loan.showRegect = false;
+          this.forceUpdate();
+        }
+        return loan;
+      })
+    });
+  };
+  endLoan() {
+    let app = this;
+
+    lendContract.methods
+      .endLoan(0)
+      .send()
+      .then(leand => {
+        app.setState({ loaner: [...this.state.loaner.pop] });
+      });
+  }
+
+  pushAddmoneyToContract = contract => {};
+
+  addLandMoney = () => {
+    alert("hello world" + this.state.Index);
+  };
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  render() {
+    let loanMoney = this.state.loaner.map(loan => (
+      <tr style={this.checkforItem(loan)}>
+        <th scope="row">{loan.LoanerAddress}</th>
+        <td>{loan.DebtorAddress}</td>
+        <td>{loan.Amount}</td>
+        <td>{loan.InterestRate}</td>
+        <td>{loan.Condition}</td>
+        <td>{loan.index}</td>
+        <td style={{ display: "white-space: nowrap", margin: "10px" }}>
+          {loan.showApprove && (
+            <button
+              onClick={this.getApproved.bind(
+                this,
+                loan.LoanerAddress,
+                this.state.isEmptyState
+              )}
+              className="btn btn-success btn-xs"
+            >
+              Appprove
+            </button>
+          )}
+          {loan.showRegect && (
+            <button
+              onClick={this.getRegect.bind(
+                this,
+                loan.LoanerAddress,
+                this.state.isEmptyState2
+              )}
+              className="btn btn-warning btn-xs"
+            >
+              Regect
+            </button>
+          )}
+        </td>
+        <td style={{ display: "white-space: nowrap", margin: "10px" }}>
+          {this.state.isEmptyState && (
+            <button
+              /////this function isn't working, i think the function is written properly
+              /// but this ui element will not call it
+              onClick={this.checkLoan}
+              className="btn btn-success btn-xs"
+            >
+              Update Info
+            </button>
+          )}
+        </td>
+      </tr>
+    ));
+    return (
+      <div className="container">
+        <button
+          style={{ textAlign: "center", width: "300px", margin: "10px" }}
+          onClick={this.addLandMoney}
+          type="button"
+          className="btn btn-info mb-2"
+        >
+          Update Table
+        </button>
+        <div>
+          <input
+            type="Index"
+            name="Index"
+            id="Index"
+            placeholder="Index"
+            value={this.state.Index}
+            onChange={this.onChange}
+          />
+        </div>
+        <div
+          style={{
+            color: "black",
+            float: "right",
+            width: "0px",
+            margin: "10px"
+          }}
+        >
+          <button
+            onClick={this.signout}
+            type="button"
+            className="btn btn-warning mb-2"
+          >
+            Signout
+          </button>
+        </div>
+
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Loaner Address</th>
+                <th scope="col">Debtor Address</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Interest Rate</th>
+                <th scope="col">Status</th>
+                <th scope="col">Index</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>{loanMoney}</tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+}
+export default Loaner;

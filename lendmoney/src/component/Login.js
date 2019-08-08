@@ -17,7 +17,7 @@ class Login extends Component {
     privateKey: "",
     page: ""
   };
-  
+
   onSubmit = e => {
     e.preventDefault();
 
@@ -37,7 +37,7 @@ class Login extends Component {
     if (this.state.isLoginSuccess) {
       if (this.state.page === "Loaner") {
         this.props.history.push({
-          pathname: "/App",
+          pathname: "/Loaner",
           state: {
             privateKey: this.state.privateKey
           }
