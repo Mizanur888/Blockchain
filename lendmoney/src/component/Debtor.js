@@ -18,24 +18,24 @@ class Debtor extends Component {
       ShowTable: true,
       ShowAddLand: false,
       tableContents: [
-        {
-          amount: "1",
-          loaner: "Number",
-          debtor: "sds",
-          index: "0",
-          interest: "5",
-          dueDate: "1",
-          condition: "1"
-        },
-        {
-          amount: "1",
-          loaner: "eijdie",
-          debtor: "sds",
-          index: "1",
-          interest: "5",
-          dueDate: "1",
-          condition: "1"
-        }
+        // {
+        //   amount: "1",
+        //   loaner: "Number",
+        //   debtor: "sds",
+        //   index: "-1",
+        //   interest: "5",
+        //   dueDate: "1",
+        //   condition: "1"
+        // },
+        // {
+        //   amount: "1",
+        //   loaner: "eijdie",
+        //   debtor: "sds",
+        //   index: "-1",
+        //   interest: "5",
+        //   dueDate: "1",
+        //   condition: "1"
+        // }
       ],
       Index: 0
     };
@@ -65,6 +65,7 @@ class Debtor extends Component {
 
   EndLoan = id => {
     //i'm pretty sure this works but i don't know how to get the input from the table
+    
     var s = String.toString(id);
     var loan = lendContract.methods
       .checkLoan(s)
@@ -98,47 +99,30 @@ class Debtor extends Component {
   PayLoan = id => {
     let app = this;
 
-    //we need to change the "from:" parameter  to the address in the table row , as well as the value
-    let s = String.toString(0);
+    //we need to change the "from:" parameter  to the address in the table row , as well as the value 
+    let s = String.toString(0)
     //var loan = lendContract.methods.checkLoan(s).send({from: account0, gas:3000000});
 
-    var web3 = new Web3(
-      new Web3.providers.HttpProvider("http://localhost:8545")
-    );
-    for (var i = 0; i < this.state.tableContents.length; i++) {
-      var index = this.state.tableContents[id].index;
-      if (i === index) {
-        var e =
-          this.state.tableContents[id].interest +
-          parseInt(this.state.tableContents[id].Amount);
+      var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      for(var i = 0;i<this.state.tableContents.length;i++){
 
-        var res = lendContract.methods
-          .payLoan(this.state.tableContents[id].Index)
-          .send(
-            {
-              from: this.state.tableContents[id].debtor,
-              gas: 3000000,
-              value: web3.utils.toWei(e)
-            },
-            (error, transactionHash) => {
-              if (!error) {
-                if (parseInt(this.state.tableContents[id].interest) > 0) {
-                  this.state.tableContents[id].condition = "PAID WITH INTEREST";
-                  this.forceUpdate();
-                } else {
-                  this.state.tableContents[id].condition = "PAID";
-                  this.forceUpdate();
-                }
-              } else {
-                this.state.tableContents[id].condition = "ERR";
-
-                this.forceUpdate();
-              }
-            }
-          );
+        var index = this.state.tableContents[id].index;
+        if(i === index){
+          alert(this.state.tableContents[id].index)
+          var res = lendContract.methods.payLoan(this.state.tableContents[id].index, this.state.tableContents[id].loaner)
+          .send({from: this.state.tableContents[id].debtor, gas:3000000, value: web3.utils.toWei(this.state.tableContents[id].amount.toString())}, (error, transactionHash) => {            
+            if(!error){                 
+              this.state.tableContents[id].condition = "DONE";
+              this.forceUpdate();  
+             }             
+        });
+        }
       }
-    }
-  };
+      
+    
+  }
+
+  
 
   pushAddmoneyToContract = contract => {
     // amount: "1",
@@ -189,7 +173,7 @@ class Debtor extends Component {
       );
 
     //contract.Index = this.count;
-    //contract.condition = "Processed";
+    contract.condition = "Processed"; 
     this.setState({ tableContents: [...this.state.tableContents, contract] });
 
     this.setState(oldState => ({
@@ -203,12 +187,15 @@ class Debtor extends Component {
   };
 
   getAllLoans = () => {
+
+
+
     alert("calling get All loans");
     lendContract.methods
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
       .then(loan => {
-        this.setState({ loaaner: [...this.state.loaner, loan] });
+        this.setState({ loaner: [...this.state.tableContents, loan] });
         this.state.loaner.push(loan);
         this.forceUpdate();
       });
@@ -239,31 +226,26 @@ class Debtor extends Component {
       .getNumLoans()
       .call({ from: account0, gas: 3000000 });
   }
+
   testLoan = () => {
+    this.forceUpdate();
+    
     lendContract.methods
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
       .then(loan => {
-        // let test = {
-        //   loaner: loan[0].lonaer,
-        //   debtor: loan[0].debtor,
-        //   amount: parseInt(loan[0].amount, 16),
-        //   interest: loan[0].interest,
-        //   dueDate: loan[0].duedate,
-        //   condition: loan[0].condition
-        //   // loanerprivkey: loan[0].loanerprivkey,
-        //   // debtorprivkey: loan[0].debtorprivkey
-        // };
-        // this.setState({ tableContents: test });
-        //  this.setState({ Index: test.amount });
-
-
-        ///check that the table is not longer loan.length
-
-        for(var i =0; i < 10; i++){
-          //if length is greater than tot contracts do not add 
-          //if(loan.length !> )
+        
+        lendContract.methods.getNumLoans().call({from:account0, gas:3000000}).then(nums=>{
+        if(this.state.tableContents.length < nums){
+        for(var i =0; i < nums; i++){
+          
           if(loan[i]!=null){
+          if(loan[i].condition == "1"){
+            loan[i].condition = "Accepted"
+          }
+          if(loan[i].condition == "2"){
+              loan[i].condition = "Paid"
+          }
             var e = this.state.tableContents.concat([
               {
                 loaner: loan[i].loaner,
@@ -271,51 +253,38 @@ class Debtor extends Component {
                 amount: parseInt(loan[i].amount, 16),
                 interest: parseInt(loan[i].interest, 16),
                 dueDate: parseInt(loan[i].dueDate, 16),
-                index: parseInt(loan[i].index),
-                condition: parseInt(loan[i].condition, 16)
+                condition: loan[i].condition.toString(),
+                index: parseInt(loan[i].index)                
               }
             ])
 
-
             this.setState({tableContents: e})
-          }
-          
-        // this.setState({
-        //   // tableContents: [
-        //   //   {
-        //   //     loaner: loan[i].loaner,
-        //   //     debtor: loan[i].debtor,
-        //   //     amount: parseInt(loan[i].amount, 16),
-        //   //     interest: parseInt(loan[i].interest, 16),
-        //   //     dueDate: parseInt(loan[i].dueDate, 16),
-        //   //     condition: parseInt(loan[i].condition, 16)
-        //   //   }
-        //   // ]
-        // });
+          }    
+      
       }
+    }
+    });
+
       this.forceUpdate();
-        
-        // this.setState({ Index: parseInt(test.interest, 16) });
-      });
+      this.testLoan();         
+    });
   };
-  // amount: "1",
-  // loaner: "Number",
-  // debtor: "sds",
-  // index: "0",
-  // interest: "5",
-  // dueDate: "1",
-  // condition: "1"
+   
   addLandMoney = (loaner, debtor, amount, interest, dueDate) => {
     const landMoney = {
       loaner,
       debtor,
       amount,
       interest,
-      dueDate
+      dueDate,
     };
 
     alert(loaner + debtor + amount + interest + dueDate);
     this.pushAddmoneyToContract(landMoney);
+    this.testLoan()
+      this.forceUpdate()
+    
+    
   };
 
   render() {

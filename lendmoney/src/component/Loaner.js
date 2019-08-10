@@ -12,7 +12,7 @@ import {
   withRouter
 } from "react-router-dom";
 
-class Loaner extends Component {
+class tableContents extends Component {
   constructor(props) {
     super(props);
 
@@ -24,29 +24,8 @@ class Loaner extends Component {
       ShowTable: true,
       ShowAddLand: false,
       Index: -1,
-      loaner: [
-        {
-          LoanerAddress: "a309cf",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          showRegect: true,
-          showApprove: true,
-          index: -1
-        },
-        {
-          LoanerAddress: "a309cfe",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          showRegect: true,
-          showApprove: true,
-          index: -1
-        }
+      tableContents: [
+       
       ]
     };
   }
@@ -68,7 +47,7 @@ class Loaner extends Component {
     };
   };
   payLoan = id => {
-    loaner: this.state.loaner.map(loan => {
+    tableContents: this.state.tableContents.map(loan => {
       if (loan.requestID === id) {
         loan.Condition = "Approved";
       }
@@ -78,7 +57,7 @@ class Loaner extends Component {
   getRegect = id => {
     alert("hello");
     this.setState({
-      loaner: this.state.loaner.map(loan => {
+      tableContents: this.state.tableContents.map(loan => {
         if (loan.LoanerAddress === id) {
           loan.Condition = "pending";
           loan.showApprove = false;
@@ -93,7 +72,7 @@ class Loaner extends Component {
   getApproved = id => {
     alert("hello");
     this.setState({
-      loaner: this.state.loaner.map(loan => {
+      tableContents: this.state.tableContents.map(loan => {
         if (loan.LoanerAddress === id) {
           loan.Condition = "Approved";
           loan.showRegect = false;
@@ -110,18 +89,56 @@ class Loaner extends Component {
       .endLoan(0)
       .send()
       .then(leand => {
-        app.setState({ loaner: [...this.state.loaner.pop] });
+        app.setState({ tableContents: [...this.state.tableContents.pop] });
       });
   }
 
   pushAddmoneyToContract = contract => {};
 
-  addLandMoney = () => {
-    alert("hello world" + this.state.Index);
+
+  testLoan = () => {
+
+    alert("welp")
+    lendContract.methods
+      .getAllLoans()
+      .call({ from: account0, gas: 3000000 })
+      .then(loan => {
+        
+        lendContract.methods.getNumLoans().call({from:account0, gas:3000000}).then(nums=>{
+        if(this.state.tableContents.length < nums){
+        for(var i =0; i < nums; i++){
+          
+          if(loan[i]!=null){
+            var e = this.state.tableContents.concat([
+              {
+                tableContents: loan[i].tableContents,
+                debtor: loan[i].debtor,
+                amount: parseInt(loan[i].amount, 16),
+                interest: parseInt(loan[i].interest, 16),
+                dueDate: parseInt(loan[i].dueDate, 16),
+                index: parseInt(loan[i].index),
+                condition: parseInt(loan[i].condition, 16)
+              }
+            ])
+
+            this.setState({tableContents: e})
+          }    
+      
+      }
+    }
+    });
+
+      this.forceUpdate();
+         
+    });
   };
+   
+
+
+
   onChange = e => this.setState({ [e.target.name]: e.target.value });
   render() {
-    let loanMoney = this.state.loaner.map(loan => (
+    let loanMoney = this.state.tableContents.map(loan => (
       <tr style={this.checkforItem(loan)}>
         <th scope="row">{loan.LoanerAddress}</th>
         <td>{loan.DebtorAddress}</td>
@@ -160,7 +177,7 @@ class Loaner extends Component {
             <button
               /////this function isn't working, i think the function is written properly
               /// but this ui element will not call it
-              onClick={this.checkLoan}
+              onClick={this.testLoan.bind(this)}
               className="btn btn-success btn-xs"
             >
               Update Info
@@ -210,7 +227,7 @@ class Loaner extends Component {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">Loaner Address</th>
+                <th scope="col">tableContents Address</th>
                 <th scope="col">Debtor Address</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Interest Rate</th>
@@ -226,4 +243,4 @@ class Loaner extends Component {
     );
   }
 }
-export default Loaner;
+export default tableContents;

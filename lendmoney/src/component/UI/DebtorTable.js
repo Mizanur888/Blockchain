@@ -19,10 +19,11 @@ export class DebtorTable extends Component {
         <td>{loan.amount}</td>
         <td>{loan.interest}</td>
         <td>{loan.condition}</td>
+        <td>{loan.dueDate}</td>
         <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           <button
-            onClick={this.props.payLoan.bind(this, loan.Index)}
+            onClick={this.props.payLoan.bind(this, loan.index)}
             className="btn btn-success btn-xs"
           >
             Pay Loan
@@ -33,7 +34,7 @@ export class DebtorTable extends Component {
             <button
               /////this function isn't working, i think the function is written properly
               /// but this ui element will not call it
-              onClick={this.props.getAllLoans.bind(this, loan.Index)}
+              onClick={this.props.getAllLoans.bind(this, loan.index)}
               className="btn btn-success btn-xs"
             >
               Update Info
@@ -52,6 +53,7 @@ export class DebtorTable extends Component {
               <th scope="col">Amount</th>
               <th scope="col">Interest Rate</th>
               <th scope="col">Status</th>
+              <th scope="col">Due Date</th>
               <th scope="col">Index</th>
               <th scope="col">Action</th>
             </tr>
