@@ -155,7 +155,7 @@ class Debtor extends Component {
         contract.amount,
         contract.interest,
         contract.dueDate,
-        condition,
+        1,
         loanerprivkey,
         debtorprivkey
       )
@@ -238,14 +238,18 @@ class Debtor extends Component {
         lendContract.methods.getNumLoans().call({from:account0, gas:3000000}).then(nums=>{
         if(this.state.tableContents.length < nums){
         for(var i =0; i < nums; i++){
-          
-          if(loan[i]!=null){
-          if(loan[i].condition == "1"){
-            loan[i].condition = "Accepted"
-          }
-          if(loan[i].condition == "2"){
+            
+            if(loan[i]!=null){
+            if(loan[i].condition == "1"){
+              loan[i].condition = "Pending"
+            }
+            if(loan[i].condition == "2"){
+                loan[i].condition = "Accepted"
+            }
+            if(loan[i].condition == "3"){
               loan[i].condition = "Paid"
-          }
+            }
+
             var e = this.state.tableContents.concat([
               {
                 loaner: loan[i].loaner,
@@ -266,7 +270,6 @@ class Debtor extends Component {
     });
 
       this.forceUpdate();
-      this.testLoan();         
     });
   };
    
@@ -288,7 +291,9 @@ class Debtor extends Component {
   };
 
   render() {
+    
     return (
+      
       <div className="container">
         <button
           style={{ textAlign: "center", width: "300px", margin: "10px" }}
@@ -304,7 +309,7 @@ class Debtor extends Component {
           type="button"
           className="btn btn-info mb-1"
         >
-          test
+          Update Page
         </button>
         <div
           style={{
@@ -341,7 +346,9 @@ class Debtor extends Component {
         </div>
       </div>
     );
+    this.testLoan()
   }
+  
 }
 
 export default Debtor;

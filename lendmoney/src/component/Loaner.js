@@ -12,7 +12,7 @@ import {
   withRouter
 } from "react-router-dom";
 
-class tableContents extends Component {
+class Loaner extends Component {
   constructor(props) {
     super(props);
 
@@ -46,6 +46,7 @@ class tableContents extends Component {
       backgroundColor: item.state === "pending" ? "#ccc" : "#00ff00"
     };
   };
+
   payLoan = id => {
     tableContents: this.state.tableContents.map(loan => {
       if (loan.requestID === id) {
@@ -70,18 +71,23 @@ class tableContents extends Component {
   };
 
   getApproved = id => {
-    alert("hello");
-    this.setState({
-      tableContents: this.state.tableContents.map(loan => {
-        if (loan.LoanerAddress === id) {
-          loan.Condition = "Approved";
-          loan.showRegect = false;
-          this.forceUpdate();
-        }
-        return loan;
+    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+    for(var i = 0;i<this.state.tableContents.length;i++){
+      var index = this.state.tableContents[id].index;
+      if(i === index){        
+        var res = lendContract.methods.acceptLoan(index).send({from:this.state.tableContents[id].loaner, value:  web3.utils.toWei(this.state.tableContents[id].amount.toString(), (error, hash) => {
+          if(!error){
+            this.state.tableContents[id].condition = "ACCEPTED";
+            this.forceUpdate();  
+          }
+        })
       })
-    });
-  };
+
+    }
+  }
+};
+
   endLoan() {
     let app = this;
 
@@ -97,8 +103,8 @@ class tableContents extends Component {
 
 
   testLoan = () => {
-
-    alert("welp")
+    this.forceUpdate();
+    
     lendContract.methods
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
@@ -109,15 +115,24 @@ class tableContents extends Component {
         for(var i =0; i < nums; i++){
           
           if(loan[i]!=null){
+          if(loan[i].condition == "1"){
+            loan[i].condition = "Pending"
+          }
+          if(loan[i].condition == "2"){
+              loan[i].condition = "Accepted"
+          }
+          if(loan[i].condition == "3"){
+            loan[i].condition = "Paid"
+          }
             var e = this.state.tableContents.concat([
               {
-                tableContents: loan[i].tableContents,
+                loaner: loan[i].loaner,
                 debtor: loan[i].debtor,
                 amount: parseInt(loan[i].amount, 16),
                 interest: parseInt(loan[i].interest, 16),
                 dueDate: parseInt(loan[i].dueDate, 16),
-                index: parseInt(loan[i].index),
-                condition: parseInt(loan[i].condition, 16)
+                condition: loan[i].condition.toString(),
+                index: parseInt(loan[i].index)                
               }
             ])
 
@@ -129,7 +144,6 @@ class tableContents extends Component {
     });
 
       this.forceUpdate();
-         
     });
   };
    
@@ -140,18 +154,19 @@ class tableContents extends Component {
   render() {
     let loanMoney = this.state.tableContents.map(loan => (
       <tr style={this.checkforItem(loan)}>
-        <th scope="row">{loan.LoanerAddress}</th>
-        <td>{loan.DebtorAddress}</td>
-        <td>{loan.Amount}</td>
-        <td>{loan.InterestRate}</td>
-        <td>{loan.Condition}</td>
+       <th scope="row">{loan.loaner}</th>
+        <td>{loan.debtor}</td>
+        <td>{loan.amount}</td>
+        <td>{loan.interest}</td>
+        <td>{loan.condition}</td>
+        <td>{loan.dueDate}</td>
         <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
-          {loan.showApprove && (
+          {(
             <button
               onClick={this.getApproved.bind(
                 this,
-                loan.LoanerAddress,
+                loan.index,
                 this.state.isEmptyState
               )}
               className="btn btn-success btn-xs"
@@ -159,7 +174,7 @@ class tableContents extends Component {
               Appprove
             </button>
           )}
-          {loan.showRegect && (
+          {(
             <button
               onClick={this.getRegect.bind(
                 this,
@@ -186,25 +201,17 @@ class tableContents extends Component {
         </td>
       </tr>
     ));
+
     return (
       <div className="container">
         <button
           style={{ textAlign: "center", width: "300px", margin: "10px" }}
-          onClick={this.addLandMoney}
+          onClick={this.testLoan}
           type="button"
           className="btn btn-info mb-2"
         >
-          Update Table
+          Update Info
         </button>
-
-        <input
-          type="Index"
-          name="Index"
-          id="Index"
-          placeholder="Index"
-          value={this.state.Index}
-          onChange={this.onChange}
-        />
 
         <div
           style={{
@@ -227,13 +234,17 @@ class tableContents extends Component {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">tableContents Address</th>
-                <th scope="col">Debtor Address</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Interest Rate</th>
-                <th scope="col">Status</th>
-                <th scope="col">Index</th>
-                <th scope="col">Action</th>
+              <tr>
+              <th scope="col">Loaner Address</th>
+              <th scope="col">Debtor Address</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Interest Rate</th>
+              <th scope="col">Status</th>
+              <th scope="col">Due Date</th>
+              <th scope="col">Index</th>
+              <th scope="col">Action</th>
+  
+            </tr>
               </tr>
             </thead>
             <tbody>{loanMoney}</tbody>
@@ -243,4 +254,4 @@ class tableContents extends Component {
     );
   }
 }
-export default tableContents;
+export default Loaner;

@@ -40,7 +40,7 @@ struct Loan {
            loanFinished: false,
            requestEnd: false
         });
-    
+        
         everyLoan.push(newloan);
         allloans[CurLoanCount] = newloan;
         allLoaners.push(_loaner);
@@ -48,7 +48,7 @@ struct Loan {
         loaners[loanerprivkey] = _loaner;
         debtors[debtorprivkey] = _debtor;
         
-        _debtor.transfer(msg.value);
+        
         
         CurLoanCount++;
         
@@ -56,19 +56,15 @@ struct Loan {
     }
     
     
+
+
+
     function endLoan(uint index) public payable{
         Loan storage  tmploan = allloans[index];
         require(msg.sender == tmploan.loaner, "Only the loaner can call this function. Debtor must requets an end to the loan");
         
-        // //lay loaner from debtor
-        address payable loaner = tmploan.loaner;
+         address payable loaner = tmploan.loaner;
         uint interest = tmploan.interest * tmploan.amount;
-        //This function has some issues, throwing non descript errors, 
-        //possible that we may need to make the debtor call this function to get the funds to the loaner.
-        //The frontend would populate the 'amount' parameter forcing the debtor to pay the loan at the required amount.
-        //The loaner would never call this function, they would call a frontend method that forces the debtor to pay the required amount back to the contract. 
-        
-        //how to use webjs to check wallet balances https://ethereum.stackexchange.com/questions/39746/cant-get-address-balance-using-web3js <-- needed for forcing debtor
         
         loaner.transfer(tmploan.amount + interest);
         CurLoanCount--;
@@ -96,20 +92,21 @@ struct Loan {
         }
         
     }
+    function acceptLoan(uint index)  public payable returns(uint256){
+        Loan storage tmp = everyLoan[index];    
+        tmp.condition = 2;
+        tmp.loaner.transfer(tmp.amount);
     
+    }
     
     function payLoan(uint index, address payable loaner) public payable returns(bool){
         //require that sender has the money 
-        require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");
-        
+        require(msg.value != 0 && msg.value > 0, "Amount must be non negative and greater than one");        
         Loan storage tmploan = allloans[index];
-        Loan storage t2 = everyLoan[index];
-        
+        Loan storage t2 = everyLoan[index];        
         require(!t2.loanFinished, "you have paid this loan already");
         t2.loanFinished = true;        
-        t2.condition = 2;
-        
-    
+        t2.condition = 3;            
         loaner.transfer(msg.value);
         return true;
     }
