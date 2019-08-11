@@ -22,7 +22,7 @@ export class DebtorTable extends Component {
         <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           <button
-            onClick={this.props.payLoan.bind(this, loan.Index)}
+            onClick={this.props.payLoan.bind(this, loan.index)}
             className="btn btn-success btn-xs"
           >
             Pay Loan

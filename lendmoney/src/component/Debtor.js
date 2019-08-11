@@ -96,6 +96,7 @@ class Debtor extends Component {
   };
 
   PayLoan = id => {
+    alert(id);
     let app = this;
 
     //we need to change the "from:" parameter  to the address in the table row , as well as the value
@@ -106,14 +107,14 @@ class Debtor extends Component {
       new Web3.providers.HttpProvider("http://localhost:8545")
     );
     for (var i = 0; i < this.state.tableContents.length; i++) {
-      var index = this.state.tableContents[id].Index;
+      var index = this.state.tableContents[id].index;
       if (i === index) {
         var e =
-          this.state.tableContents[id].interest +
-          parseInt(this.state.tableContents[id].Amount);
+          this.state.tableContents[i].interest +
+          String.toString(this.state.tableContents[i].Amount);
 
         var res = lendContract.methods
-          .payLoan(this.state.tableContents[id].Index)
+          .payLoan(this.state.tableContents[i].Index)
           .send(
             {
               from: this.state.tableContents[id].debtor,
@@ -149,7 +150,7 @@ class Debtor extends Component {
     // dueDate: "1",
     // condition: "1"
     let app = this;
-    const condition = 1;
+    const condition = "pending";
     ///how to get values from the form???
     const loanerprivkey = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     const debtorprivkey = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
@@ -196,6 +197,10 @@ class Debtor extends Component {
       ShowAddLand: !oldState.ShowAddLand,
       ShowTable: !oldState.ShowTable
     }));
+
+    // this.setState({ Index: res });
+    alert(this.state.Index);
+    //this.state.loaner.index
   };
 
   getAllLoans = () => {
@@ -240,24 +245,40 @@ class Debtor extends Component {
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
       .then(loan => {
-        loan.forEach(element => {
-          this.forceUpdate();
-          alert("Length: " + element.length);
-          this.setState({
-            tableContents: [
+        for (var i = 0; i < 10; i++) {
+          //if length is greater than tot contracts do not add
+          //if(loan.length !> )
+          if (loan[i] != null) {
+            var e = this.state.tableContents.concat([
               {
-                loaner: element.loaner,
-                debtor: element.debtor,
-                amount: parseInt(element.amount, 16),
-                interest: parseInt(element.interest, 16),
-                dueDate: parseInt(element.dueDate, 16),
-                condition: parseInt(element.condition, 16)
+                loaner: loan[i].loaner,
+                debtor: loan[i].debtor,
+                amount: parseInt(loan[i].amount, 16),
+                interest: parseInt(loan[i].interest, 16),
+                dueDate: parseInt(loan[i].dueDate, 16),
+                index: parseInt(loan[i].index),
+                condition: parseInt(loan[i].condition, 16)
               }
-            ]
-          });
-          this.forceUpdate();
-        });
+            ]);
+
+            this.setState({ tableContents: e });
+          }
+
+          // this.setState({
+          //   // tableContents: [
+          //   //   {
+          //   //     loaner: loan[i].loaner,
+          //   //     debtor: loan[i].debtor,
+          //   //     amount: parseInt(loan[i].amount, 16),
+          //   //     interest: parseInt(loan[i].interest, 16),
+          //   //     dueDate: parseInt(loan[i].dueDate, 16),
+          //   //     condition: parseInt(loan[i].condition, 16)
+          //   //   }
+          //   // ]
+          // });
+        }
         this.forceUpdate();
+
         // this.setState({ Index: parseInt(test.interest, 16) });
       });
   };
@@ -298,7 +319,7 @@ class Debtor extends Component {
           type="button"
           className="btn btn-info mb-1"
         >
-          test
+          Update Table
         </button>
         <div
           style={{

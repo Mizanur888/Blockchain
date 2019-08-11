@@ -21,34 +21,33 @@ class Loaner extends Component {
     console.log("Condiation: " + this.props.history.location.Condition);
 
     this.state = {
-      ShowTable: true,
-      ShowAddLand: false,
       Index: -1,
-      loaner: [
+      tableContents: [
         {
-          LoanerAddress: "a309cf",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          showRegect: true,
+          amount: "1",
+          loaner: "Number",
+          debtor: "sds",
+          index: "0",
+          interest: "5",
+          dueDate: "1",
+          condition: "pending",
           showApprove: true,
-          index: -1
+          showRegect: true
         },
         {
-          LoanerAddress: "a309cfe",
-          DebtorAddress: "ar29292#4112erc",
-          Amount: "5ETH",
-          InterestRate: "5%",
-          DueDate: "23-2-19",
-          Condition: "pending",
-          showRegect: true,
+          amount: "1",
+          loaner: "eijdie",
+          debtor: "sds",
+          index: "1",
+          interest: "5",
+          dueDate: "1",
+          condition: "pending",
           showApprove: true,
-          index: -1
+          showRegect: true
         }
       ]
     };
+    // this.testLoan = this.testLoan(this);
   }
 
   componentDidMount() {
@@ -68,9 +67,9 @@ class Loaner extends Component {
     };
   };
   payLoan = id => {
-    loaner: this.state.loaner.map(loan => {
+    loaner: this.state.tableContents.map(loan => {
       if (loan.requestID === id) {
-        loan.Condition = "Approved";
+        loan.condition = "Approved";
       }
       return loan;
     });
@@ -78,9 +77,9 @@ class Loaner extends Component {
   getRegect = id => {
     alert("hello");
     this.setState({
-      loaner: this.state.loaner.map(loan => {
-        if (loan.LoanerAddress === id) {
-          loan.Condition = "pending";
+      tableContents: this.state.tableContents.map(loan => {
+        if (loan.loaner === id) {
+          loan.condition = "pending";
           loan.showApprove = false;
 
           this.forceUpdate();
@@ -93,9 +92,9 @@ class Loaner extends Component {
   getApproved = id => {
     alert("hello");
     this.setState({
-      loaner: this.state.loaner.map(loan => {
-        if (loan.LoanerAddress === id) {
-          loan.Condition = "Approved";
+      tableContents: this.state.tableContents.map(loan => {
+        if (loan.loaner === id) {
+          loan.condition = "Approved";
           loan.showRegect = false;
           this.forceUpdate();
         }
@@ -110,31 +109,57 @@ class Loaner extends Component {
       .endLoan(0)
       .send()
       .then(leand => {
-        app.setState({ loaner: [...this.state.loaner.pop] });
+        app.setState({ tableContents: [...this.state.tableContents.pop] });
       });
   }
 
   pushAddmoneyToContract = contract => {};
+  testLoan = () => {
+    alert("testLoan called");
+    lendContract.methods
+      .getAllLoans()
+      .call({ from: account0, gas: 3000000 })
+      .then(loan => {
+        for (var i = 0; i < 10; i++) {
+          //if length is greater than tot contracts do not add
+          //if(loan.length !> )
+          if (loan[i] != null) {
+            var e = this.state.tableContents.concat([
+              {
+                loaner: loan[i].loaner,
+                debtor: loan[i].debtor,
+                amount: parseInt(loan[i].amount, 16),
+                interest: parseInt(loan[i].interest, 16),
+                dueDate: parseInt(loan[i].dueDate, 16),
+                index: parseInt(loan[i].index),
+                condition: parseInt(loan[i].condition, 16)
+              }
+            ]);
 
-  addLandMoney = () => {
-    alert("hello world" + this.state.Index);
+            this.setState({ tableContents: e });
+          }
+        }
+        this.forceUpdate();
+
+        // this.setState({ Index: parseInt(test.interest, 16) });
+      });
   };
   onChange = e => this.setState({ [e.target.name]: e.target.value });
   render() {
-    let loanMoney = this.state.loaner.map(loan => (
+    let loanMoney = this.state.tableContents.map(loan => (
       <tr style={this.checkforItem(loan)}>
-        <th scope="row">{loan.LoanerAddress}</th>
-        <td>{loan.DebtorAddress}</td>
-        <td>{loan.Amount}</td>
-        <td>{loan.InterestRate}</td>
-        <td>{loan.Condition}</td>
+        <th scope="row">{loan.loaner}</th>
+        <td>{loan.debtor}</td>
+        <td>{loan.amount}</td>
+        <td>{loan.interest}</td>
+        <td>{loan.condition}</td>
         <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {loan.showApprove && (
             <button
               onClick={this.getApproved.bind(
                 this,
-                loan.LoanerAddress,
+                loan.loaner,
                 this.state.isEmptyState
               )}
               className="btn btn-success btn-xs"
@@ -146,24 +171,12 @@ class Loaner extends Component {
             <button
               onClick={this.getRegect.bind(
                 this,
-                loan.LoanerAddress,
+                loan.loaner,
                 this.state.isEmptyState2
               )}
               className="btn btn-warning btn-xs"
             >
               Regect
-            </button>
-          )}
-        </td>
-        <td style={{ display: "white-space: nowrap", margin: "10px" }}>
-          {this.state.isEmptyState && (
-            <button
-              /////this function isn't working, i think the function is written properly
-              /// but this ui element will not call it
-              onClick={this.checkLoan}
-              className="btn btn-success btn-xs"
-            >
-              Update Info
             </button>
           )}
         </td>
@@ -173,21 +186,12 @@ class Loaner extends Component {
       <div className="container">
         <button
           style={{ textAlign: "center", width: "300px", margin: "10px" }}
-          onClick={this.addLandMoney}
+          onClick={this.testLoan}
           type="button"
           className="btn btn-info mb-2"
         >
           Update Table
         </button>
-
-        <input
-          type="Index"
-          name="Index"
-          id="Index"
-          placeholder="Index"
-          value={this.state.Index}
-          onChange={this.onChange}
-        />
 
         <div
           style={{
