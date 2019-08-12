@@ -56,38 +56,39 @@ class Loaner extends Component {
     });
   };
   getRegect = id => {
-    alert("hello" + id);
-    alert("Length" + this.state.tableContents.length);
-    alert(this.state.tableContents[id].condition);
     this.state.tableContents[id].condition = "Regect";
     this.forceUpdate();
     this.state.showApprove = false;
   };
-
   getApproved = id => {
-    var web3 = new Web3(
-      new Web3.providers.HttpProvider("http://localhost:8545")
-    );
-
-    for (var i = 0; i < this.state.tableContents.length; i++) {
-      var index = this.state.tableContents[id].index;
-      if (i === index) {
-        lendContract.methods.acceptLoan(index).send({
-          from: this.state.tableContents[i].loaner,
-          value: web3.utils.toWei(
-            this.state.tableContents[i].amount,
-            (error, hash) => {
-              if (!error) {
-                this.state.tableContents[i].condition = "ACCEPTED";
-                this.state.showApprove = false;
-                this.forceUpdate();
-              }
-            }
-          )
-        });
-      }
-    }
+    this.state.tableContents[id].condition = "Approved";
+    this.forceUpdate();
+    this.state.showApprove = false;
   };
+  // getApproved = id => {
+  //   var web3 = new Web3(
+  //     new Web3.providers.HttpProvider("http://localhost:8545")
+  //   );
+
+  //   for (var i = 0; i < this.state.tableContents.length; i++) {
+  //     var index = this.state.tableContents[id].index;
+  //     if (i === index) {
+  //       lendContract.methods.acceptLoan(index).send({
+  //         from: this.state.tableContents[i].loaner,
+  //         value: web3.utils.toWei(
+  //           this.state.tableContents[i].amount,
+  //           (error, hash) => {
+  //             if (!error) {
+  //               this.state.tableContents[i].condition = "ACCEPTED";
+  //               this.state.showApprove = false;
+  //               this.forceUpdate();
+  //             }
+  //           }
+  //         )
+  //       });
+  //     }
+  //   }
+  // };
 
   endLoan() {
     let app = this;
