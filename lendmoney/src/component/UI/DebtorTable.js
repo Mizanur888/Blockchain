@@ -7,7 +7,7 @@ export class DebtorTable extends Component {
   }
   checkforItem = item => {
     return {
-      backgroundColor: item.state === "pending" ? "#ccc" : "#00ff00"
+      backgroundColor: item.condition === "Pending" ? "#ccc" : "#00ff00"
     };
   };
 
@@ -31,7 +31,7 @@ export class DebtorTable extends Component {
         </td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (
-            <button              
+            <button
               onClick={this.props.testLoan}
               className="btn btn-success btn-xs"
             >
@@ -42,23 +42,21 @@ export class DebtorTable extends Component {
       </tr>
     ));
     return (
-      <div className="container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Loaner Address</th>
-              <th scope="col">Debtor Address</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Interest Rate</th>
-              <th scope="col">Status</th>
-              <th scope="col">Due Date</th>
-              <th scope="col">Index</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>{loanMoney}</tbody>
-        </table>
-      </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Loaner Address</th>
+            <th scope="col">Debtor Address</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Interest Rate</th>
+            <th scope="col">Status</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Index</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>{loanMoney}</tbody>
+      </table>
     );
   }
 }

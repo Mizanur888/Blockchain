@@ -19,14 +19,14 @@ class Loaner extends Component {
     this.privateKey = this.props.history.location.state.privateKey;
     console.log("Private Key: " + this.privateKey);
     console.log("Condiation: " + this.props.history.location.Condition);
-
+    this.testLoan();
     this.state = {
       ShowTable: true,
       ShowAddLand: false,
+      showApprove: true,
+      showRegect: true,
       Index: -1,
-      tableContents: [
-       
-      ]
+      tableContents: []
     };
   }
 
@@ -43,7 +43,7 @@ class Loaner extends Component {
 
   checkforItem = item => {
     return {
-      backgroundColor: item.state === "pending" ? "#ccc" : "#00ff00"
+      backgroundColor: item.condition === "Regect" ? "red" : "#00ff00"
     };
   };
 
@@ -56,37 +56,38 @@ class Loaner extends Component {
     });
   };
   getRegect = id => {
-    alert("hello");
-    this.setState({
-      tableContents: this.state.tableContents.map(loan => {
-        if (loan.LoanerAddress === id) {
-          loan.Condition = "pending";
-          loan.showApprove = false;
-
-          this.forceUpdate();
-        }
-        return loan;
-      })
-    });
+    alert("hello" + id);
+    alert("Length" + this.state.tableContents.length);
+    alert(this.state.tableContents[id].condition);
+    this.state.tableContents[id].condition = "Regect";
+    this.forceUpdate();
+    this.state.showApprove = false;
   };
 
   getApproved = id => {
-    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    var web3 = new Web3(
+      new Web3.providers.HttpProvider("http://localhost:8545")
+    );
 
-    for(var i = 0;i<this.state.tableContents.length;i++){
+    for (var i = 0; i < this.state.tableContents.length; i++) {
       var index = this.state.tableContents[id].index;
-      if(i === index){        
-        var res = lendContract.methods.acceptLoan(index).send({from:this.state.tableContents[id].loaner, value:  web3.utils.toWei(this.state.tableContents[id].amount.toString(), (error, hash) => {
-          if(!error){
-            this.state.tableContents[id].condition = "ACCEPTED";
-            this.forceUpdate();  
-          }
-        })
-      })
-
+      if (i === index) {
+        lendContract.methods.acceptLoan(index).send({
+          from: this.state.tableContents[i].loaner,
+          value: web3.utils.toWei(
+            this.state.tableContents[i].amount,
+            (error, hash) => {
+              if (!error) {
+                this.state.tableContents[i].condition = "ACCEPTED";
+                this.state.showApprove = false;
+                this.forceUpdate();
+              }
+            }
+          )
+        });
+      }
     }
-  }
-};
+  };
 
   endLoan() {
     let app = this;
@@ -101,60 +102,56 @@ class Loaner extends Component {
 
   pushAddmoneyToContract = contract => {};
 
-
   testLoan = () => {
     this.forceUpdate();
-    
+
     lendContract.methods
       .getAllLoans()
       .call({ from: account0, gas: 3000000 })
       .then(loan => {
-        
-        lendContract.methods.getNumLoans().call({from:account0, gas:3000000}).then(nums=>{
-        if(this.state.tableContents.length < nums){
-        for(var i =0; i < nums; i++){
-          
-          if(loan[i]!=null){
-          if(loan[i].condition == "1"){
-            loan[i].condition = "Pending"
-          }
-          if(loan[i].condition == "2"){
-              loan[i].condition = "Accepted"
-          }
-          if(loan[i].condition == "3"){
-            loan[i].condition = "Paid"
-          }
-            var e = this.state.tableContents.concat([
-              {
-                loaner: loan[i].loaner,
-                debtor: loan[i].debtor,
-                amount: parseInt(loan[i].amount, 16),
-                interest: parseInt(loan[i].interest, 16),
-                dueDate: parseInt(loan[i].dueDate, 16),
-                condition: loan[i].condition.toString(),
-                index: parseInt(loan[i].index)                
+        lendContract.methods
+          .getNumLoans()
+          .call({ from: account0, gas: 3000000 })
+          .then(nums => {
+            if (this.state.tableContents.length < nums) {
+              for (var i = 0; i < nums; i++) {
+                if (loan[i] != null) {
+                  if (loan[i].condition == "1") {
+                    loan[i].condition = "Pending";
+                  }
+                  if (loan[i].condition == "2") {
+                    loan[i].condition = "Accepted";
+                  }
+                  if (loan[i].condition == "3") {
+                    loan[i].condition = "Paid";
+                  }
+                  var e = this.state.tableContents.concat([
+                    {
+                      loaner: loan[i].loaner,
+                      debtor: loan[i].debtor,
+                      amount: parseInt(loan[i].amount, 16),
+                      interest: parseInt(loan[i].interest, 16),
+                      dueDate: parseInt(loan[i].dueDate, 16),
+                      condition: loan[i].condition.toString(),
+                      index: parseInt(loan[i].index)
+                    }
+                  ]);
+
+                  this.setState({ tableContents: e });
+                }
               }
-            ])
+            }
+          });
 
-            this.setState({tableContents: e})
-          }    
-      
-      }
-    }
-    });
-
-      this.forceUpdate();
-    });
+        this.forceUpdate();
+      });
   };
-   
-
-
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
   render() {
     let loanMoney = this.state.tableContents.map(loan => (
       <tr style={this.checkforItem(loan)}>
-       <th scope="row">{loan.loaner}</th>
+        <th scope="row">{loan.loaner}</th>
         <td>{loan.debtor}</td>
         <td>{loan.amount}</td>
         <td>{loan.interest}</td>
@@ -162,7 +159,7 @@ class Loaner extends Component {
         <td>{loan.dueDate}</td>
         <td>{loan.index}</td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
-          {(
+          {
             <button
               onClick={this.getApproved.bind(
                 this,
@@ -173,19 +170,15 @@ class Loaner extends Component {
             >
               Appprove
             </button>
-          )}
-          {(
+          }
+          {
             <button
-              onClick={this.getRegect.bind(
-                this,
-                loan.LoanerAddress,
-                this.state.isEmptyState2
-              )}
+              onClick={this.getRegect.bind(this, loan.index)}
               className="btn btn-warning btn-xs"
             >
               Regect
             </button>
-          )}
+          }
         </td>
         <td style={{ display: "white-space: nowrap", margin: "10px" }}>
           {this.state.isEmptyState && (
@@ -203,48 +196,46 @@ class Loaner extends Component {
     ));
 
     return (
-      <div className="container">
-        <button
-          style={{ textAlign: "center", width: "300px", margin: "10px" }}
-          onClick={this.testLoan}
-          type="button"
-          className="btn btn-info mb-2"
-        >
-          Update Info
-        </button>
-
-        <div
-          style={{
-            color: "black",
-            float: "right",
-            width: "0px",
-            margin: "10px"
-          }}
-        >
+      <div>
+        <div className="container">
           <button
-            onClick={this.signout}
+            style={{ textAlign: "center", width: "300px", margin: "10px" }}
+            onClick={this.testLoan}
             type="button"
-            className="btn btn-warning mb-2"
+            className="btn btn-info mb-2"
           >
-            Signout
+            Update Info
           </button>
-        </div>
 
+          <div
+            style={{
+              color: "black",
+              float: "right",
+              width: "0px",
+              margin: "10px"
+            }}
+          >
+            <button
+              onClick={this.signout}
+              type="button"
+              className="btn btn-warning mb-2"
+            >
+              Signout
+            </button>
+          </div>
+        </div>
         <div>
           <table className="table">
             <thead>
               <tr>
-              <tr>
-              <th scope="col">Loaner Address</th>
-              <th scope="col">Debtor Address</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Interest Rate</th>
-              <th scope="col">Status</th>
-              <th scope="col">Due Date</th>
-              <th scope="col">Index</th>
-              <th scope="col">Action</th>
-  
-            </tr>
+                <th scope="col">Loaner Address</th>
+                <th scope="col">Debtor Address</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Interest Rate</th>
+                <th scope="col">Status</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Index</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>{loanMoney}</tbody>
