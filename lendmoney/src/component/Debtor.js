@@ -150,7 +150,7 @@ class Debtor extends Component {
     // dueDate: "1",
     // condition: "1"
     let app = this;
-    const condition = "pending";
+    const condition = 1;
     ///how to get values from the form???
     const loanerprivkey = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
     const debtorprivkey = "0x26c74ded3a717bf2a549de43213db180b7a57af0";
