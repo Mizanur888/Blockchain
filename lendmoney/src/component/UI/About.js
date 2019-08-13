@@ -15,6 +15,12 @@ export default function About() {
           <Link to="/">Login</Link>
         </button>
       </div>
+      <a href = "https://www.youtube.com/watch?v=iQ-zI31H0LA">
+         <h1 style={{textAlign:"center"}}>Video Demo Link </h1>
+      </a>
+      <a href = "https://github.com/Mizanur888/Blockchain/tree/master">
+      <h1 style={{textAlign:"center"}}>Git Repo </h1>
+   </a>
       <h1 style={{ textAlign: "center" }}>Project Description</h1>
       <div style={{ margin: "50px" }}>
         <h3>What?</h3>
