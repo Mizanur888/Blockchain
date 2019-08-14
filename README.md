@@ -62,7 +62,7 @@ Download or fork the project from github. As long as you've installed everything
 + Loaners can also approve or reject pending loans.
 + Debtors can pay off loans 
 
-### [Demo Video](https://www.youtube.com/watch?v=iQ-zI31H0LA)
+### [Demo Video](https://www.youtube.com/watch?v=dpqVRt8_aWI&feature=youtu.be)
 
 ### Team members:
 + Malnati Josh, Front end, Design, presentation 
