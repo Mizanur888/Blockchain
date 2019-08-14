@@ -15,7 +15,7 @@ export default function About() {
           <Link to="/">Login</Link>
         </button>
       </div>
-      <a href = "https://www.youtube.com/watch?v=iQ-zI31H0LA">
+      <a href = "https://www.youtube.com/watch?v=dpqVRt8_aWI&feature=youtu.be">
          <h1 style={{textAlign:"center"}}>Video Demo Link </h1>
       </a>
       <a href = "https://github.com/Mizanur888/Blockchain/tree/master">
@@ -104,7 +104,9 @@ export default function About() {
           <li>Web3.js * $ npm install web3@0.20.5</li>
         </ul>
         <h3>Install</h3>
-       <p> Download or fork the project from github. As long as you've installed everything listed above, you should be good to go!</p>
+        <p> Download or fork the project from github.</p>
+        <p>As long as you've installed everything listed above, you should be good to go!</p>
+        <p>Do npm install - to install necessary packages that it needs</p>
       </div>
       <div style={{ margin: "50px" }}>
               <h3>Run</h3>
