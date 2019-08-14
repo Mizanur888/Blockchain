@@ -21,7 +21,7 @@ Smart contact that will hold the contract conditions, between the Lender and Rec
 After paying off a loan, the money will move back to the lender 
 
 2.      Backend 
-       Set of APIs to interact with LendMoney smart contract
+       
 
 Transaction API ( Ability to create loans, pay loans, and populate the front end) 
 
